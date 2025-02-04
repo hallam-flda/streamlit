@@ -3,6 +3,10 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import random
 import numpy as np
+from scipy.stats import norm
+import plotly.graph_objects as go
+
+plt.rcParams['text.usetex'] = False
 
 
 def random_walk(n_trials):
@@ -745,4 +749,196 @@ def pdf_view(n_trials=50000):
 pdf_plot = pdf_view()
 
 st.pyplot(pdf_plot)
-       
+
+st.header("Example Usage")
+
+st.markdown(r"""Given what we know about the distribution for the standard colour choice of european roulette what is the probability that after 1000
+            your balance is **either** < -£75 or > £25
+            
+First we subsitute in the value of t to our general normal distribution formula
+
+            
+$$
+            N \sim \left(-\frac{1000}{37}, \left(\frac{6\sqrt{38}}{37}\right)^2 \cdot 1000 \right)
+$$              
+
+which tells us that our distribution will be centered around a mean of $E[Y_{1000}] \approx -27.03$ and a standard deviation of $\sigma\sqrt{t} \approx 31.62$ """)
+
+
+example_mean = -27.027027
+example_st_dev = 31.62
+
+
+def colour_roulette_pdf(t):
+    # Calculate parameters for the normal distribution
+    sigma = 6 * np.sqrt(38) / 37
+    center = -1 / 37 * t
+    std_dev = sigma * np.sqrt(t)
+    
+    # Generate x values over ±3 standard deviations around the center
+    x_values = np.linspace(center - 3 * std_dev, center + 3 * std_dev, 1000)
+    
+    # Use norm.pdf to calculate the PDF values
+    y_values = norm.pdf(x_values, loc=center, scale=std_dev)
+    
+    # Create the plot
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.fill_between(x_values, y_values, where=(x_values <= -75) | (x_values >= 25),
+                    color='lightblue', alpha=0.5, label='Shaded Area')
+    ax.axvline(x=-75, color='red', linestyle='--', linewidth=1)
+    ax.axvline(x=25, color='red', linestyle='--', linewidth=1)
+    ax.plot(x_values, y_values, color='blue', label='Normal PDF')
+    ax.text(-120,0.006, r"$ P(X < -75)$", fontsize = 14)
+    ax.text(40,0.006, r"$ P(X > 25)$", fontsize = 14)
+    ax.set_title("PDF For Colour Betting in European Roulette after t = 1000 Spins")
+    ax.set_xlabel("Balance")
+    ax.set_ylabel("Probability Density")
+    
+    
+    return fig
+
+
+
+# Example: Plot for t = 1000
+pdf_fig = colour_roulette_pdf(1000)
+st.pyplot(pdf_fig)
+
+st.markdown(r"""
+
+To calculate the cumulative probability of values more extreme than the limits set, we can use the probability between the two lines and subtract it from 1.            
+<br> 
+$$
+1 - P(-75 \leq X \leq 25) = 1 - \left[ \Phi \left( \frac{25 - \text{centre}}{\text{std\_dev}} \right) - \Phi \left( \frac{-75 - \text{centre}}{\text{std\_dev}} \right) \right] 
+$$
+<br> 
+
+            
+$$
+= 1 - \left[ \Phi \left( \frac{25 - (-27.03)}{31.62} \right) - \Phi \left( \frac{-75 - (-27.03)}{31.62} \right) \right] 
+$$
+<br> 
+
+            
+$$
+= 1 - \left[ \Phi (1.645) - \Phi (-1.517) \right] = 11.46\%
+$$
+<br> 
+
+Therefore the probability of having lost more than £75 or won more than £25 after 1,000 spins at £1 per spin is 11.46%
+""", unsafe_allow_html=True)
+
+# Slider for the number of spins
+import streamlit as st
+import numpy as np
+import plotly.graph_objects as go
+from scipy.stats import norm
+
+st.title("Interactive PDF for European Roulette Colour Betting")
+
+# Slider for the number of spins (t)
+t = st.slider("Number of Spins (t)", min_value=100, max_value=10000, value=1000, step=100)
+
+# Calculate distribution parameters based on t
+sigma = 6 * np.sqrt(38) / 37       # per-bet sigma
+center = -1/37 * t                 # drift (mean)
+std_dev = sigma * np.sqrt(t)       # standard deviation
+
+# Define the x-axis range as ±3 standard deviations around the center
+x_min = center - 3 * std_dev
+x_max = center + 3 * std_dev
+
+# Set default values for the bound sliders (e.g., 0.5 std_dev from the center)
+default_lower = center - 0.5 * std_dev
+default_upper = center + 0.5 * std_dev
+
+# Create sliders for the lower and upper bounds with dynamic ranges
+lower_bound = st.slider(
+    "Lower Bound", 
+    min_value=float(x_min), 
+    max_value=float(center), 
+    value=float(default_lower), 
+    step=1.0,
+    key="lower_bound"
+)
+upper_bound = st.slider(
+    "Upper Bound", 
+    min_value=float(center), 
+    max_value=float(x_max), 
+    value=float(default_upper), 
+    step=1.0,
+    key="upper_bound"
+)
+
+# Compute the PDF using scipy.stats.norm
+x_values = np.linspace(x_min, x_max, 1000)
+y_values = norm.pdf(x_values, loc=center, scale=std_dev)
+
+# Calculate the tail probabilities (i.e. probability of being more extreme than the bounds)
+p_lower = norm.cdf(lower_bound, loc=center, scale=std_dev)
+p_upper = 1 - norm.cdf(upper_bound, loc=center, scale=std_dev)
+extreme_prob = p_lower + p_upper
+
+formatted_lower = f"-£{abs(lower_bound):,.2f}" if lower_bound < 0 else f"£{abs(lower_bound):,.2f}"
+formatted_upper = f"-£{abs(upper_bound):,.2f}" if upper_bound < 0 else f"£{abs(upper_bound):,.2f}"
+
+st.write(
+    f"**Probability of balance being either less than {formatted_lower} or greater than {formatted_upper}: {extreme_prob:.2%}**"
+)
+
+# Create the Plotly figure
+fig = go.Figure()
+
+# Add the PDF curve
+fig.add_trace(go.Scatter(
+    x=x_values, 
+    y=y_values,
+    mode='lines',
+    name='Normal PDF',
+    line=dict(color='blue')
+))
+
+# Add vertical dashed lines for the lower and upper bounds
+fig.add_shape(
+    type="line", x0=lower_bound, x1=lower_bound, y0=0, y1=max(y_values),
+    line=dict(color="red", dash="dash")
+)
+fig.add_shape(
+    type="line", x0=upper_bound, x1=upper_bound, y0=0, y1=max(y_values),
+    line=dict(color="red", dash="dash")
+)
+
+# Shade the left tail (x < lower_bound)
+mask_left = x_values < lower_bound
+fig.add_trace(go.Scatter(
+    x=x_values[mask_left],
+    y=y_values[mask_left],
+    mode='lines',
+    fill='tozeroy',
+    fillcolor='rgba(173,216,230,0.5)',  # light blue fill
+    line=dict(color='lightblue'),
+    showlegend=False
+))
+
+# Shade the right tail (x > upper_bound)
+mask_right = x_values > upper_bound
+fig.add_trace(go.Scatter(
+    x=x_values[mask_right],
+    y=y_values[mask_right],
+    mode='lines',
+    fill='tozeroy',
+    fillcolor='rgba(173,216,230,0.5)',  # light blue fill
+    line=dict(color='lightblue'),
+    showlegend=False
+))
+
+# Update layout of the plot
+fig.update_layout(
+    title=f"PDF for European Roulette Colour Betting (t = {t})",
+    xaxis_title="Balance",
+    yaxis_title="Probability Density",
+    xaxis=dict(showgrid=True),
+    yaxis=dict(showgrid=True),
+    showlegend=False
+)
+
+st.plotly_chart(fig, use_container_width=True)
