@@ -487,7 +487,7 @@ $$
 
 """)
 
-st.markdown(r""""
+st.markdown(r"""
 #### Variance and Standard Deviation for Colour Choice
 
 The equation for the variance of any random variable is given by the following equation:
@@ -510,7 +510,7 @@ $$
 
 
 
-again, $Y_{i}$ can only take two values, -1 or 35
+again, $Y_{i}$ can only take two values, -1 or 1
 
 
 
@@ -662,7 +662,7 @@ def large_t_with_drift(num_simulations=25, n_trials=1000, pdf_view = False):
     # Disable autoscaling so these limits stick
     ax.autoscale(enable=False)
     
-    ax.set_title('Random Walk Simulations')
+    ax.set_title('Random Walk With Drift Simulations')
     ax.set_xlabel('Time (Steps)')
     ax.set_ylabel('Balance')
     ax.set_frame_on(False)  # Similar to plt.box(False)
@@ -833,7 +833,20 @@ import numpy as np
 import plotly.graph_objects as go
 from scipy.stats import norm
 
-st.title("Interactive PDF for European Roulette Colour Betting")
+st.title("Why is this interesting?")
+
+st.markdown(r"""
+The theory behind a markov process producing a normal distributed is prefaced on a large number of spins $t$
+and no restrictions on how much a player can win or lose. This is unrealistic in practice. 
+
+ 
+My argument is that once we exclude these outcomes (players stop transacting at a threshold) the RTP figure quoted for roulette no longer makes sense.
+
+Below is an interactive graph that shows which proportion of outcomes are excluded once
+lower and upper bounds are taken into consideration.
+            """)
+
+st.header("Interactive PDF for European Roulette Colour Betting")
 
 # Slider for the number of spins (t)
 t = st.slider("Number of Spins (t)", min_value=100, max_value=10000, value=1000, step=100)
@@ -853,7 +866,7 @@ default_upper = center + 0.5 * std_dev
 
 # Create sliders for the lower and upper bounds with dynamic ranges
 lower_bound = st.slider(
-    "Lower Bound", 
+    "Lower Threshold", 
     min_value=float(x_min), 
     max_value=float(center), 
     value=float(default_lower), 
@@ -861,7 +874,7 @@ lower_bound = st.slider(
     key="lower_bound"
 )
 upper_bound = st.slider(
-    "Upper Bound", 
+    "Upper Threshold", 
     min_value=float(center), 
     max_value=float(x_max), 
     value=float(default_upper), 
