@@ -163,6 +163,38 @@ Each country looks roughly proportional to the amount of time I spent in each, h
 </ul>
             """, unsafe_allow_html=True)
 
+st.header("Who Did I Meet on Average?")
+
+st.markdown("""
+Taking the most appropriate measure of average for each column, I will attempt to generalise who I was most likely to meet.           
+            """)
+
+st.write(f"""
+Most common country = {df.country_origin.mode()[0]} \n
+Median Age = {df.age.median():.2f} \n
+Most Common Sex = {df.sex.mode()[0]} \n
+Travelling as = {df.travelling_as.mode()[0]} \n
+Most Likely to meet in/on = {df.location_met.mode()[0]} \n
+How often did we meet = {df.times_met.mode()[0]}
+""")
+
+st.markdown("""
+Given at the time I was a 27 year old male from the UK who was travelling solo and staying in hostels, this is perhaps unsurprising.
+            """)
+
+st.header("But What About the Outliers?")
+
+st.markdown("""
+Far more interesting than all the copies of myself I met are those who          
+            """)
+
+st.subheader("Age")
+
+st.markdown("""
+Given at the time I was a 27 year old male from the UK who was travelling solo and staying in hostels, this is perhaps unsurprising.
+            """)
+
+
 st.subheader("Appendix - Full Dataset")
 
 
