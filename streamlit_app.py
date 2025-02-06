@@ -17,7 +17,7 @@ pages = {
     "Projects" :[
     ],
     "Personal":[
-        
+        st.Page("pages/travel_friends.py", title = "Travel Friends")
     ]
 
 }

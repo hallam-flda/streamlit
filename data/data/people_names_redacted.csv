@@ -1,0 +1,275 @@
+person_id,country_origin,age,sex,travelling_as,country_met,location_met,times_met
+1,Netherlands,22,F,Friends,Peru,Accomodation,2
+2,Netherlands,22,F,Friends,Peru,Accomodation,2
+3,Peru,27,M,Resident,Peru,Accomodation,2
+4,Germany,25,M,Solo,Peru,Accomodation,1
+5,UK,26,M,Solo,Peru,Accomodation,1
+6,Brazil,24,M,Solo,Peru,Accomodation,1
+7,Germany,30,M,Solo,Peru,Accomodation,1
+8,Peru,25,M,Resident,Peru,Accomodation,1
+9,Peru,29,M,Resident,Peru,Accomodation,1
+10,Peru,21,F,Resident,Peru,Accomodation,1
+11,Peru,27,M,Resident,Peru,Accomodation,1
+12,Peru,24,M,Resident,Peru,Accomodation,1
+13,Germany,65,M,Solo,Peru,Accomodation,1
+14,Peru,26,F,Resident,Peru,Online Dating,1
+15,Israel,24,M,Friends,Peru,Accomodation,1
+16,Israel,24,M,Friends,Peru,Accomodation,1
+17,Germany,32,M,Siblings,Peru,Accomodation,1
+18,Germany,34,F,Siblings,Peru,Accomodation,1
+19,Israel,25,M,Friends,Peru,Accomodation,1
+20,Israel,25,M,Friends,Peru,Accomodation,1
+21,Israel,23,F,Solo,Peru,Accomodation,1
+22,Bulgaria,40,M,Solo,Peru,Accomodation,1
+23,Peru,33,F,Resident,Peru,Accomodation,1
+24,Peru,23,F,Resident,Peru,Accomodation,1
+25,UK,60,M,Solo,Peru,Tour,1
+26,USA,30,F,Couple,Peru,School,1
+27,UK,40,F,Resident,Peru,School,1
+28,Germany,26,M,Couple,Peru,School,1
+29,Australia,40,M,Solo,Peru,School,1
+30,Turkey,42,M,Solo,Peru,School,1
+31,USA,45,M,Couple,Peru,School,1
+32,USA,45,F,Couple,Peru,School,1
+33,Australia,25,F,Solo,Peru,School,1
+34,Italy,28,F,Solo,Peru,School,1
+35,UK,24,M,Solo,Peru,School,1
+36,Argentina,30,M,Friends,Peru,Accomodation,1
+37,Argentina,30,M,Friends,Peru,Accomodation,1
+38,Argentina,30,M,Friends,Peru,Accomodation,1
+39,Chile,65,M,Resident,Chile,Hitchhike Received,1
+40,UK,30,F,Couple,Chile,Tour,1
+41,UK,30,M,Couple,Chile,Tour,1
+42,Netherlands,24,F,Friends,Chile,Tour,1
+43,Netherlands,24,F,Friends,Chile,Tour,1
+44,USA,55,F,Couple,Chile,Tour,1
+45,USA,55,M,Couple,Chile,Tour,1
+46,USA,24,M,Friends,Chile,Accomodation,1
+47,USA,24,M,Friends,Chile,Accomodation,1
+48,Germany,29,M,Couple,Chile,Accomodation,1
+49,Germany,27,F,Couple,Chile,Accomodation,1
+50,Chile,40,F,Resident,Chile,Accomodation,1
+51,Australia,21,M,Siblings,Peru,Accomodation,1
+52,Australia,24,M,Siblings,Peru,Accomodation,1
+53,France,25,M,Solo,Chile,Accomodation,1
+54,UK,42,M,Solo,Chile,Accomodation,1
+55,Netherlands,24,F,Solo,Chile,Hiking,1
+56,Belgium,68,F,Solo,Chile,Hiking,1
+57,Czechia,32,M,Friends,Chile,Hiking,1
+58,Slovakia,32,M,Friends,Chile,Hiking,1
+59,Chile,28,F,Friends,Chile,Hiking,1
+60,Chile,28,F,Friends,Chile,Hiking,1
+61,Switzerland,26,F,Friends,Argentina,Bus,1
+62,Switzerland,26,F,Friends,Argentina,Bus,1
+63,UK,26,M,Solo,Argentina,Accomodation,1
+64,USA,25,M,Solo,Argentina,Accomodation,1
+65,USA,23,M,Couple,Argentina,Accomodation,1
+66,USA,23,F,Couple,Argentina,Accomodation,1
+67,Germany,28,F,Solo,Argentina,Accomodation,1
+68,UK,27,M,Couple,Argentina,Accomodation,1
+69,UK,27,F,Couple,Argentina,Accomodation,1
+70,USA,27,M,Solo,Argentina,Accomodation,1
+71,Uruguay,65,F,Solo,Argentina,Accomodation,1
+72,Russia,36,M,Solo,Argentina,Accomodation,1
+73,Argentina,24,M,Solo,Argentina,Accomodation,1
+74,Argentina,28,M,Friends,Argentina,Accomodation,1
+75,Argentina,29,F,Friends,Argentina,Accomodation,1
+76,USA,62,M,Solo,Chile,Accomodation,1
+77,Slovakia,72,M,Solo,Chile,Accomodation,1
+78,Argentina,40,M,Solo,Chile,Hitchhike Received,1
+79,Chile,66,M,Resident,Chile,Hitchhike Received,1
+80,Chile,43,M,Solo,Chile,Ferry,1
+81,UK,27,M,Solo,Chile,Accomodation,1
+82,France,30,F,Solo,Chile,Accomodation,1
+83,Germany,30,F,Solo,Chile,Accomodation,1
+84,Chile,33,M,Solo,Chile,Hitchhike Given,1
+85,Chile,28,M,Couple,Chile,Hitchhike Given,1
+86,Chile,28,F,Couple,Chile,Hitchhike Given,1
+87,Hungary,30,M,Couple,Chile,Tour,1
+88,Hungary,30,F,Couple,Chile,Tour,1
+89,Germany,26,F,Friends,Chile,Accomodation,1
+90,Germany,26,F,Friends,Chile,Accomodation,1
+91,Germany,22,M,Solo,Chile,Hitchhike Given,2
+92,UK,39,M,Solo,Chile,Accomodation,3
+93,Spain,32,M,Couple,Chile,Accomodation,1
+94,Spain,32,F,Couple,Chile,Accomodation,1
+95,Chile,30,F,Solo,Chile,Accomodation,1
+96,France,27,M,Friends,Chile,Hitchhike Given,1
+97,France,27,M,Friends,Chile,Hitchhike Given,1
+98,France,27,M,Friends,Chile,Hitchhike Given,1
+99,UK,26,F,Friends,Chile,Tour,1
+100,New Zealand,26,F,Friends,Chile,Tour,1
+101,New Zealand,26,F,Friends,Chile,Tour,1
+102,New Zealand,26,F,Friends,Chile,Tour,1
+103,Italy,49,M,Solo,Chile,Hitchhike Received,1
+104,Germany,25,F,Solo,Chile,Accomodation,1
+105,Belgium,30,M,Couple,Chile,Thermal Bath,2
+106,Belgium,30,F,Couple,Chile,Thermal Bath,2
+107,Israel,23,M,Solo,Chile,Accomodation,4
+108,Netherlands,25,M,Solo,Chile,Accomodation,1
+109,Argentina,26,M,Couple,Chile,Hitchhike Received,1
+110,Argentina,26,F,Couple,Chile,Hitchhike Received,1
+111,Chile,35,M,Resident,Chile,Hitchhike Received,1
+112,Chile,35,M,Resident,Chile,Hitchhike Received,1
+113,Germany,40,M,Family,Chile,Hitchhike Received,1
+114,Germany,38,F,Family,Chile,Hitchhike Received,1
+115,Germany,0,F,Family,Chile,Hitchhike Received,1
+116,Switzerland,31,M,Solo,Chile,Bus,1
+117,UK,24,F,Friends,Argentina,Accomodation,1
+118,UK,24,F,Friends,Argentina,Accomodation,1
+119,UK,26,M,Solo,Argentina,Accomodation,1
+120,UK,23,F,Solo,Argentina,Accomodation,1
+121,Germany,28,F,Solo,Argentina,Accomodation,1
+122,Netherlands,24,F,Solo,Argentina,Accomodation,2
+123,UK,26,M,Solo,Argentina,Accomodation,1
+124,UK,28,F,Solo,Argentina,Accomodation,1
+125,UK,26,M,Solo,Argentina,Accomodation,1
+126,USA,34,M,Solo,Argentina,Accomodation,1
+127,USA,35,M,Friends,Argentina,Accomodation,1
+128,Argentina,28,M,Friends,Argentina,Accomodation,1
+129,Canada,30,M,Solo,Argentina,Accomodation,1
+130,France,28,F,Solo,Argentina,Accomodation,1
+131,USA,25,M,Solo,Argentina,Accomodation,1
+132,USA,26,F,Solo,Argentina,Accomodation,1
+133,USA,23,F,Solo,Argentina,Accomodation,1
+134,Brazil,25,M,Solo,Argentina,Accomodation,1
+135,Austria,29,F,Solo,Argentina,Accomodation,1
+136,USA,26,M,Solo,Argentina,Accomodation,1
+137,Argentina,28,M,Solo,Argentina,Accomodation,1
+138,Netherlands,23,M,Friends,Argentina,Accomodation,1
+139,Netherlands,23,M,Friends,Argentina,Accomodation,1
+140,UK,28,F,Solo,Argentina,Accomodation,1
+141,UK,29,F,Solo,Argentina,Accomodation,2
+142,Brazil,25,M,Solo,Argentina,Accomodation,1
+143,USA,33,M,Solo,Argentina,Accomodation,1
+144,USA,28,M,Solo,Argentina,Accomodation,1
+145,UK,18,F,Solo,Argentina,Accomodation,1
+146,UK,23,M,Solo,Argentina,Accomodation,1
+147,UK,26,M,Solo,Argentina,Accomodation,2
+148,Denmark,25,M,Friends,Argentina,Accomodation,1
+149,USA,25,M,Friends,Argentina,Accomodation,1
+150,Norway,29,M,Solo,Argentina,Accomodation,1
+151,USA,24,F,Couple,Argentina,Accomodation,1
+152,USA,25,M,Couple,Argentina,Accomodation,1
+153,Australia,30,M,Solo,Argentina,Accomodation,1
+154,USA,23,F,Friends,Argentina,Accomodation,1
+155,France,22,F,Friends,Argentina,Accomodation,1
+156,France,22,F,Friends,Argentina,Accomodation,1
+157,France,22,F,Friends,Argentina,Accomodation,1
+158,Argentina,59,M,Resident,Argentina,Golf,1
+159,Argentina,73,M,Resident,Argentina,Golf,1
+160,Argentina,75,M,Resident,Argentina,Golf,1
+161,Bolivia,40,M,Resident,Argentina,Golf,1
+162,USA,31,M,Resident,Argentina,Golf,1
+163,USA,30,M,Resident,Argentina,Golf,1
+164,Italy,24,M,Resident,Argentina,Bar,1
+165,Argentina,28,F,Resident,Argentina,Online Dating,4
+166,Argentina,40,M,Solo,Argentina,Accomodation,1
+167,UK,29,M,Solo,Argentina,Accomodation,1
+168,USA,24,M,Solo,Argentina,Accomodation,1
+169,UK,22,F,Friends,Argentina,Accomodation,1
+170,UK,22,F,Friends,Argentina,Accomodation,1
+171,UK,22,F,Friends,Argentina,Accomodation,1
+172,UK,22,F,Friends,Argentina,Accomodation,1
+173,UK,24,M,Solo,Argentina,Accomodation,2
+174,UK,35,M,Solo,Argentina,Accomodation,3
+175,Canada,23,F,Solo,Argentina,Accomodation,1
+176,Finland,24,F,Solo,Argentina,Accomodation,1
+177,USA,26,M,Solo,Argentina,Accomodation,1
+178,UK,22,F,Solo,Argentina,Accomodation,1
+179,Germany,27,F,Solo,Bolivia,Accomodation,1
+180,Germany,19,F,Friends,Bolivia,Hiking,1
+181,Germany,19,F,Friends,Bolivia,Hiking,1
+182,Israel,22,M,Friends,Bolivia,Hiking,1
+183,Israel,25,M,Friends,Bolivia,Hiking,1
+184,Israel,23,M,Friends,Bolivia,Hiking,1
+185,New Zealand,29,F,Solo,Bolivia,Accomodation,1
+186,Australia,28,F,Solo,Bolivia,School,1
+187,UK,27,F,Solo,Bolivia,Accomodation,2
+188,France,35,F,Solo,Bolivia,School,1
+189,Germany,28,F,Solo,Bolivia,Accomodation,1
+190,Belgium,26,F,Couple,Bolivia,Accomodation,1
+191,USA,26,M,Couple,Bolivia,Accomodation,1
+192,UK,53,M,Solo,Bolivia,Accomodation,1
+193,Germany,20,F,Solo,Bolivia,Accomodation,1
+194,UK,26,M,Solo,Bolivia,Wallyball,1
+195,USA,65,M,Couple,Bolivia,Tour,1
+196,USA,65,F,Couple,Bolivia,Tour,1
+197,UK,25,M,Couple,Bolivia,Tour,1
+198,UK,25,F,Couple,Bolivia,Tour,1
+199,UK,28,M,Solo,Bolivia,School,1
+200,Bolivia,33,M,Resident,Bolivia,School,1
+201,Bolivia,43,F,Resident,Bolivia,School,1
+202,Bolivia,41,F,Resident,Bolivia,School,1
+203,Peru,23,M,Resident,Peru,School,1
+204,Argentina,42,M,Resident,Argentina,Accomodation,1
+205,Germany,36,M,Solo,Argentina,Accomodation,1
+206,Brazil,30,M,Solo,Argentina,Accomodation,1
+207,Netherlands,25,M,Friends,Chile,Accomodation,1
+208,Netherlands,25,M,Friends,Chile,Accomodation,1
+209,USA,22,M,Friends,Chile,Accomodation,1
+210,New Zealand,29,F,Solo,Chile,Accomodation,2
+211,UK,26,M,Couple,Chile,Accomodation,2
+212,UK,26,F,Couple,Chile,Accomodation,2
+213,Canada,24,M,Friends,Chile,Accomodation,1
+214,Germany,19,M,Friends,Chile,Tour,1
+215,Germany,19,F,Friends,Chile,Tour,1
+216,Brazil,40,F,Friends,Chile,Tour,1
+217,Brazil,42,F,Friends,Chile,Tour,1
+218,UK,58,M,Family,Chile,Tour,1
+219,UK,57,F,Family,Chile,Tour,1
+220,UK,21,M,Family,Chile,Tour,1
+221,Germany,22,F,Solo,Bolivia,Bar,2
+222,Italy,33,M,Solo,Bolivia,Accomodation,1
+223,Bolivia,23,M,Resident,Bolivia,Tour,1
+224,UK,23,M,Couple,Bolivia,Accomodation,1
+225,UK,29,F,Couple,Bolivia,Accomodation,1
+226,Netherlands,28,F,Solo,Bolivia,Accomodation,1
+227,Ireland,29,M,Solo,Bolivia,Tour,1
+228,Ireland,26,M,Friends,Bolivia,Tour,1
+229,Ireland,26,F,Friends,Bolivia,Tour,1
+230,Ireland,26,F,Friends,Bolivia,Tour,1
+231,Ireland,26,F,Friends,Bolivia,Tour,1
+232,Ireland,26,F,Friends,Bolivia,Tour,1
+233,USA,26,F,Couple,Bolivia,Tour,1
+234,Germany,24,F,Couple,Bolivia,Tour,1
+235,Bolivia,28,M,Resident,Bolivia,Tour,1
+236,Bolivia,28,M,Resident,Bolivia,Tour,1
+237,UK,30,M,Solo,Peru,Accomodation,1
+238,UK,23,M,Solo,Peru,Accomodation,1
+239,Argentina,31,F,Resident,Argentina,Girlfriend,1
+240,Argentina,26,F,Resident,Argentina,Girlfriend,1
+241,Argentina,42,F,Resident,Argentina,Girlfriend,1
+242,Argentina,41,F,Resident,Argentina,Girlfriend,1
+243,Argentina,45,M,Resident,Argentina,Girlfriend,1
+244,Argentina,36,M,Resident,Argentina,Girlfriend,1
+245,Argentina,40,M,Resident,Argentina,Girlfriend,1
+246,Argentina,38,M,Resident,Argentina,Girlfriend,1
+247,Argentina,65,M,Resident,Argentina,Girlfriend,1
+248,Argentina,25,F,Resident,Argentina,Girlfriend,1
+249,Argentina,22,F,Resident,Argentina,Girlfriend,1
+250,Argentina,26,F,Resident,Argentina,Girlfriend,1
+251,Argentina,21,M,Resident,Argentina,Girlfriend,1
+252,Argentina,26,M,Resident,Argentina,Girlfriend,1
+253,Argentina,25,M,Resident,Argentina,Girlfriend,1
+254,Argentina,24,F,Resident,Argentina,Girlfriend,1
+255,Argentina,24,F,Resident,Argentina,Girlfriend,1
+256,Argentina,27,M,Resident,Argentina,Girlfriend,1
+257,Argentina,26,F,Resident,Argentina,Girlfriend,1
+258,Argentina,28,M,Resident,Argentina,Girlfriend,1
+259,Argentina,57,M,Resident,Argentina,Girlfriend,1
+260,Argentina,54,F,Resident,Argentina,Girlfriend,1
+261,Argentina,17,M,Resident,Argentina,Girlfriend,1
+262,Argentina,17,F,Resident,Argentina,Girlfriend,1
+263,USA,64,F,Friends,Peru,Train,1
+264,USA,62,F,Friends,Peru,Train,1
+265,USA,24,F,Solo,Peru,Tour,1
+266,Germany,25,M,Solo,Peru,Tour,1
+267,Australia,32,F,Solo,Peru,Tour,1
+268,UK,19,F,Friends,Peru,Tour,1
+269,UK,22,F,Friends,Peru,Tour,1
+270,UK,22,F,Friends,Peru,Tour,1
+271,UK,31,M,Solo,Peru,Tour,1
+272,UK,19,F,Friends,Peru,Tour,1
+273,Peru,28,M,Resident,Peru,Tour,1
+274,France,33,M,Solo,Peru,Tour,1
