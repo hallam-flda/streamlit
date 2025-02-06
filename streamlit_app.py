@@ -6,8 +6,22 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.write("# Welcome to Streamlit! 👋")
 
-# Adding some text
-st.write("This is a simple homepage created using Streamlit. You can expand this app by adding more pages with different functionalities.")
+pages = {
+    "Home": [
+        st.Page("pages/home.py", title = "Introduction")
+    ],
+    "Maths Theory": [
+        st.Page("pages/stochastic_processes.py", title="Stochastic Processes")
+    ],
+    "Projects" :[
+    ],
+    "Personal":[
+        
+    ]
 
+}
+
+
+pg = st.navigation(pages)
+pg.run()
