@@ -79,7 +79,7 @@ st.markdown("""
 While taking various forms of averages across different categories isn't always likely to yield a realistic answer, I did in fact meet 2 people who match this description.         
             """)
 
-st.header("Geography")
+st.title("Geography")
 st.markdown("""
 As mentioned in the introduction, with the exception of the Countries I visited, 
 the map consists almost entirely of countries that are well-developed and have a high proportion of English sepakers.
@@ -115,6 +115,7 @@ fig.update_geos(
 fig.update_layout(
     title_text='Nationality Count of Travellers I Met',
     title_x=0.4,
+    dragmode = False,
     geo=dict(
         lakecolor='White',  # Color of lakes
         showland=True,
@@ -161,6 +162,7 @@ fig_2.update_geos(
 fig_2.update_layout(
     title_text='Location of Meeting Place',
     title_x=0.4,
+    dragmode = False,
     geo=dict(
         lakecolor='White',  # Color of lakes
         showland=True,
@@ -197,7 +199,7 @@ st.markdown("""
 Given at the time I was a 27 year old male from the UK who was travelling solo and staying in hostels, this is perhaps unsurprising.
             """)
 
-st.title("Age")
+st.title("Age & Sex")
 
 st.markdown("""
 In general I found the average traveller to be of a similar age to myself but I did meet some older people. The boxplot below shows the distribution of age split by sex.
@@ -239,7 +241,7 @@ fig_boxplot_2 = sns_stripplot(df=df_age_boxplot_accom, dodge_toggle = dodge_outp
 st.pyplot(fig_boxplot_2)
 
 st.markdown("""
-When the toggle is one, it looks as if we have two clusters for females, young twenties and older twenties, whereas males
+When the toggle is on, it looks as if we have two clusters for females, young twenties and older twenties, whereas males
 tend to have a more normal distirbution centred around the mid-20s (with an additional peak at 30)
 """)
 
@@ -255,8 +257,29 @@ st.pyplot(figa)
 st.markdown("""
 However, when we look at age distribution for both sexes across all locations met, it becomes more apparent that
 females have clusters at certain ages. This could be either due to a small sample size, or more likely, my reluctance to ask ages and therefore guess.
-Since I may have more information or at least more confidence in guessing the age of a male, I have a more even distribution of data.""")
+Since I may have more information or at least more confidence in guessing the age of a male, I have a more even distribution of data.
+            """)
 
+st.header("Traveller Type")
+
+st.markdown("""
+Below is a bar chart of the different traveller types I categorised people into. Some of these are rather broad such as 'Resident' which encompasses those who lived, worked or studied in the country.
+           """)
+
+df_ttype = df.copy()
+df_ttype['travelling_as'] = np.where(df_ttype['travelling_as'].isin(['Siblings']), 'Family', df_ttype['travelling_as'])
+# size is useful to reduce to one column rather than having the same number of columns as the source df
+df_ttype = df_ttype.groupby(["travelling_as", "sex"]).size().reset_index(name='count')
+
+df_ttype
+
+
+fig_ttype = plt.figure(figsize =(12,6))
+sns.barplot(df_ttype, x="count", y = 'travelling_as', hue = "sex")
+
+st.pyplot(fig_ttype)
+
+st.write("more changes")
 
 st.header("But What About the Outliers?")
 
@@ -268,5 +291,4 @@ Far more interesting than all the copies of myself I met are those who are as di
 
 st.subheader("Appendix - Full Dataset")
 
-
-#df
+df
