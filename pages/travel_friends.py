@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
 import seaborn as sns
 import numpy as np
 
@@ -204,8 +205,6 @@ st.title("Age & Sex")
 st.markdown("""
 In general I found the average traveller to be of a similar age to myself but I did meet some older people. The boxplot below shows the distribution of age split by sex.
             """)
-# top_met = df.groupby("location_met").count()
-# top_met
 
 df_age_boxplot = df.copy()
 df_age_boxplot['location_grouped'] = np.where(df_age_boxplot['location_met'].isin(['Accomodation','Tour']), df['location_met'], 'Other')
@@ -218,6 +217,8 @@ def sns_stripplot(df, ordered = None, dodge_toggle = False):
     sns.swarmplot(data=df, x="age", y="location_grouped", hue="sex", dodge = dodge_toggle, order = ordered)#, jitter = True)
     plt.xlabel("Age")
     plt.ylabel("Location Met")
+
+
     return fig
 
 # Correct usage of the defined function to generate a figure
@@ -242,15 +243,28 @@ st.pyplot(fig_boxplot_2)
 
 st.markdown("""
 When the toggle is on, it looks as if we have two clusters for females, young twenties and older twenties, whereas males
-tend to have a more normal distirbution centred around the mid-20s (with an additional peak at 30)
+tend to have a more normal distirbution centred around the mid-20s (with an additional peak at 30).
 """)
 
+options = ["Baby", "Septuagenarians"]
+selection = st.radio("Outlier Choice", options)  # Using radio for a better example
 
-figa = plt.figure(figsize=(12, 6))
-# sns.stripplot is correctly used here as a function call
-sns.swarmplot(data=df, x="age", y="sex")#, jitter = True)
+# Create a figure for the swarm plot
+figa, axa = plt.subplots(figsize=(12, 6))
+sns.swarmplot(data=df, x="age", y="sex", ax=axa)
+
+# Calculate y position for the circle based on the 'sex' category
+y_positions = {'M': 0, 'F': 1}  # Adjust these based on your actual data
+circle_y = y_positions['F']  # Example, adjust based on selection or logic
+
+# Adding a circle to the plot
+circle = Circle((0, 0), 0.2, color='red', fill=False, linewidth=1)  # Example position and size
+axa.add_patch(circle)
+
+# Set labels
 plt.xlabel("Age")
 plt.ylabel("Sex")
+
 
 st.pyplot(figa)
 
@@ -260,7 +274,7 @@ females have clusters at certain ages. This could be either due to a small sampl
 Since I may have more information or at least more confidence in guessing the age of a male, I have a more even distribution of data.
             """)
 
-st.header("Traveller Type")
+st.title("Traveller Type")
 
 st.markdown("""
 Below is a bar chart of the different traveller types I categorised people into. Some of these are rather broad such as 'Resident' which encompasses those who lived, worked or studied in the country.
@@ -269,26 +283,48 @@ Below is a bar chart of the different traveller types I categorised people into.
 df_ttype = df.copy()
 df_ttype['travelling_as'] = np.where(df_ttype['travelling_as'].isin(['Siblings']), 'Family', df_ttype['travelling_as'])
 # size is useful to reduce to one column rather than having the same number of columns as the source df
-df_ttype = df_ttype.groupby(["travelling_as", "sex"]).size().reset_index(name='count')
-
-df_ttype
-
+df_ttype = df_ttype.groupby(["travelling_as"]).size().reset_index(name='count')
 
 fig_ttype = plt.figure(figsize =(12,6))
-sns.barplot(df_ttype, x="count", y = 'travelling_as', hue = "sex")
-
+sns.barplot(df_ttype, x="count", y = 'travelling_as', order = ["Family","Couple","Resident","Friends","Solo"])
+plt.xlabel("Count")
+plt.ylabel("Traveller Type")
 st.pyplot(fig_ttype)
 
-st.write("more changes")
+st.markdown("""
+As a solo traveller you often go out of your way to meet other people. This is reflected in the data in both senses, I was looking for
+people to socialise with and other solo travellers were seeking me out.
 
-st.header("But What About the Outliers?")
+That being said, when travelling solo, you are approached far more often from those in groups/pairs
+(and more receptive to being approached) than when travelling with others. Usually the leading question is 'Are you travelling alone?'.
+""")
+
+st.title("Meeting Method")
+
 
 st.markdown("""
-Far more interesting than all the copies of myself I met are those who are as different, demographically speaking, from me as possible.
-            """)
+Getting into the slightly more obscure now, below is a bar plot of all the methods I met people.
+""")
+
+df_lmet = df.copy()
+# size is useful to reduce to one column rather than having the same number of columns as the source df
+df_lmet = df_lmet.groupby(["location_met"]).size().reset_index(name='count')
+df_lmet = df_lmet.sort_values("count")
+
+fig_lmet = plt.figure(figsize =(12,6))
+sns.barplot(df_lmet, x="count", y = 'location_met')
+plt.xlabel("Count")
+plt.ylabel("Location Met")
+st.pyplot(fig_lmet)
+
+st.title("Outliers")
 
 
+st.markdown("""
+
+           """)
 
 st.subheader("Appendix - Full Dataset")
+with st.expander("Source Data"):
+    df
 
-df
