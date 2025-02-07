@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 
 #st.set_page_config(page_title="Travel Friends", page_icon="👫")
 
@@ -16,12 +19,7 @@ There were no solid plans after that, I was just going to see what felt interest
 
 Early on I decided against keeping a diary, this is not something I have done before and honestly it felt like
 a bit of a chore. However, I did decide to keep a log of all the people I met along the way.
-
-It is important to note that this data is only representative of people that I approached and had a meaningful interaction with
-or vice-versa. Therefore, this is not necesarily indicative of the entire travelling population. Factors such as my
-rudeimentary Spanish, joining English-speaking tours and generally seeking out people of a similar demographic to myself will bias this
-data heavily. It is perhaps no surprise that the most common nationality of people I met is the same as mine, British.""")
-            
+""")
 
 st.header("Data Dictionary")
 
@@ -49,6 +47,37 @@ data_dict.rename(columns={'index': 'Column'}, inplace=True)
 data_dict['Description'] = data_desc
 
 st.table(data_dict)
+
+st.subheader("Data Collection Notes")
+
+st.markdown("""
+
+It is important to note that this data is only representative of people that I approached and had a meaningful interaction with
+or vice-versa. Therefore, this is not necesarily indicative of the entire travelling population. Factors such as my
+rudeimentary Spanish, joining English-speaking tours and generally seeking out people of a similar demographic to myself will bias this
+data heavily. 
+
+What constitutes as a meaningful interaction? Simply whether I remembered the person when it came to updating the log, usually 2-4 weeks from the date of us meeting.
+           """)
+
+st.header("Who Did I Meet on Average?")
+
+st.markdown("""
+Taking a form of average for each column, the average person I met was:         
+            """)
+
+st.write(f"""
+Most common country = {df.country_origin.mode()[0]} \n
+Median Age = {df.age.median():.2f} \n
+Most Common Sex = {df.sex.mode()[0]} \n
+Travelling as = {df.travelling_as.mode()[0]} \n
+Most Likely to meet in/on = {df.location_met.mode()[0]} \n
+How often did we meet = {df.times_met.mode()[0]}
+""")
+
+st.markdown("""
+While taking various forms of averages across different categories isn't always likely to yield a realistic answer, I did in fact meet 2 people who match this description.         
+            """)
 
 st.header("Geography")
 st.markdown("""
@@ -163,36 +192,78 @@ Each country looks roughly proportional to the amount of time I spent in each, h
 </ul>
             """, unsafe_allow_html=True)
 
-st.header("Who Did I Meet on Average?")
-
-st.markdown("""
-Taking the most appropriate measure of average for each column, I will attempt to generalise who I was most likely to meet.           
-            """)
-
-st.write(f"""
-Most common country = {df.country_origin.mode()[0]} \n
-Median Age = {df.age.median():.2f} \n
-Most Common Sex = {df.sex.mode()[0]} \n
-Travelling as = {df.travelling_as.mode()[0]} \n
-Most Likely to meet in/on = {df.location_met.mode()[0]} \n
-How often did we meet = {df.times_met.mode()[0]}
-""")
 
 st.markdown("""
 Given at the time I was a 27 year old male from the UK who was travelling solo and staying in hostels, this is perhaps unsurprising.
             """)
+
+st.title("Age")
+
+st.markdown("""
+In general I found the average traveller to be of a similar age to myself but I did meet some older people. The boxplot below shows the distribution of age split by sex.
+            """)
+# top_met = df.groupby("location_met").count()
+# top_met
+
+df_age_boxplot = df.copy()
+df_age_boxplot['location_grouped'] = np.where(df_age_boxplot['location_met'].isin(['Accomodation','Tour']), df['location_met'], 'Other')
+
+categories_ordered = ['Accomodation', 'Tour', 'Other']
+def sns_stripplot(df, ordered = None, dodge_toggle = False):
+    # Ensure you are creating a figure with plt.figure() and not calling plt as a function
+    fig = plt.figure(figsize=(12, 6))
+    # sns.stripplot is correctly used here as a function call
+    sns.swarmplot(data=df, x="age", y="location_grouped", hue="sex", dodge = dodge_toggle, order = ordered)#, jitter = True)
+    plt.xlabel("Age")
+    plt.ylabel("Location Met")
+    return fig
+
+# Correct usage of the defined function to generate a figure
+fig_boxplot = sns_stripplot(df=df_age_boxplot, ordered = categories_ordered)
+st.pyplot(fig_boxplot)
+
+df_age_boxplot_accom = df_age_boxplot[df_age_boxplot['location_met']=="Accomodation"]
+
+st.markdown("""
+Something that immediately catches my eye here is the number of entries at age = 27. This is likely because I did not ask everybody their age and often had to make an
+educated guess. I suspect the question I asked myself at the time was 'Do I think they're about the same age as me?'.
+
+While not as pronounced, a similar effect can be observed at ages of 5 year intervals i.e. 30, 40, 45. I almost certainly did not ask the ages of those above 50.
+
+Something else that catches my eye is the strange clustering between males and females for those I met at my accommodation. The below
+swarm plot focuses on just this category with a toggle to separate the sexes onto different lines
+                        """)
+
+dodge_output = st.toggle("Separate", False)
+fig_boxplot_2 = sns_stripplot(df=df_age_boxplot_accom, dodge_toggle = dodge_output)
+st.pyplot(fig_boxplot_2)
+
+st.markdown("""
+When the toggle is one, it looks as if we have two clusters for females, young twenties and older twenties, whereas males
+tend to have a more normal distirbution centred around the mid-20s (with an additional peak at 30)
+""")
+
+
+figa = plt.figure(figsize=(12, 6))
+# sns.stripplot is correctly used here as a function call
+sns.swarmplot(data=df, x="age", y="sex")#, jitter = True)
+plt.xlabel("Age")
+plt.ylabel("Sex")
+
+st.pyplot(figa)
+
+st.markdown("""
+However, when we look at age distribution for both sexes across all locations met, it becomes more apparent that
+females have clusters at certain ages. This could be either due to a small sample size, or more likely, my reluctance to ask ages and therefore guess.
+Since I may have more information or at least more confidence in guessing the age of a male, I have a more even distribution of data.""")
+
 
 st.header("But What About the Outliers?")
 
 st.markdown("""
-Far more interesting than all the copies of myself I met are those who          
+Far more interesting than all the copies of myself I met are those who are as different, demographically speaking, from me as possible.
             """)
 
-st.subheader("Age")
-
-st.markdown("""
-Given at the time I was a 27 year old male from the UK who was travelling solo and staying in hostels, this is perhaps unsurprising.
-            """)
 
 
 st.subheader("Appendix - Full Dataset")
