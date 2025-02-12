@@ -135,7 +135,8 @@ fig.update_layout(
 st.plotly_chart(fig)
 
 st.markdown("""
-Below is a plot of the number of travellers I met in each country I visited.
+Below is a plot of the number of travellers I met in each country I visited. Each country looks roughly proportional to the amount of time I spent in that country,
+however, when toggling to people met per day, it can be seen that I met almost twice as many people per day in Chile than the others.
             """)
 
 # Aggregate data to count occurrences of each country
@@ -179,26 +180,80 @@ fig_2.update_layout(
     )
 )
 
-st.plotly_chart(fig_2)
+# Aggregate data for a count of people met per country
+df_country_duration = pd.read_csv("data/data/days_in_countries.csv")
+df_country_duration = df_country_duration.groupby(["country"]).sum()
+df_country_duration = df_country_duration["days_spent"].copy()
+df_country_duration = df_country_duration.sort_values(ascending=False)
+
+# Merge the two data sets
+df_countries_merged = pd.merge(country_counts_met,df_country_duration,'inner', left_on = "Country", right_on = "country")
+
+# Create new column for pm/pd
+df_countries_merged["people_met_per_day"] = df_countries_merged["Counts"]/df_countries_merged["days_spent"]
+
+
+fig_people_met_per_day = px.choropleth(
+    df_countries_merged, 
+    locations="Country",
+    locationmode='country names',
+    color="people_met_per_day",
+    hover_name="Country",
+    color_continuous_scale=px.colors.sequential.Viridis, 
+    labels={'Counts':'People Met Per Day'}
+)
+
+fig_people_met_per_day.update_geos(
+    visible=False,  # Turn off the default geography visibility
+    showcountries=True,  # Show country borders
+    countrycolor="LightGrey",
+    scope='south america'  
+)
+
+fig_people_met_per_day.update_layout(
+    title_text='People Met Per Day',
+    title_x=0.4,
+    dragmode = False,
+    geo=dict(
+        lakecolor='White',  # Color of lakes
+        showland=True,
+        landcolor='White',
+        showocean=True,
+        oceancolor='LightBlue',  # A subtle ocean color
+        projection_type='equirectangular'
+    ),
+    font=dict(
+        family="Arial, sans-serif",
+        size=12,
+        color="RebeccaPurple"
+    ),
+    coloraxis_colorbar=dict(
+        title=" "
+    )
+)
+
+country_met_map_output = st.toggle("Per Day", False)
+
+st.plotly_chart(fig_people_met_per_day if country_met_map_output else fig_2)
 
 st.markdown("""
-Each country looks roughly proportional to the amount of time I spent in each, however, my experiences were rather different from country to country:
+It is hard to specify when this might be as my experiences were rather different from country to country:
             
 <ul>
             <li> In <b>Peru</b> my main activities were Spanish School and the Salkantay trek, both of which meant spending considerable time with the same people.
-            <li> In <b>Chile</b> I was primarily hiking and camping solo, however, I did depend on hitchhiking a lot for transportation.
+            <li> In <b>Chile</b> I was primarily hiking and camping solo, this likely prompted me to be more sociable.
+                <ul>
+                    <li> A lot of the people I met in Chile I then met again later on in the trip. This means they are attributed only once as met in Chile.
+                </ul>
             <li> <b>Argentina</b> was the country I spent by far the most time in and through my girlfriend met many locals.
             <li> I spent the least time in <b>Bolivia</b> but did take another two weeks of Spanish Lessons which invariably leads to making connections.
                 <ul>
-                    <li> Bolivia was also the last country I visited and the country where I met a lot of the same people I had earlier in the trip all of whom would be attributed to another country.
+                    <li> Bolivia was also the last country I visited and the country where I met a lot of the same people I had earlier in the trip.
+                    <li> Spending time with people I previously met meant I was putting less effort into meeting new people.
                 </ul>
 </ul>
             """, unsafe_allow_html=True)
 
-
-st.markdown("""
-Given at the time I was a 27 year old male from the UK who was travelling solo and staying in hostels, this is perhaps unsurprising.
-            """)
 
 st.title("Age & Sex")
 
