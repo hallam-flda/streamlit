@@ -12,7 +12,8 @@ pages = {
         st.Page("pages/home.py", title = "Introduction")
     ],
     "Maths Theory": [
-        st.Page("pages/stochastic_processes.py", title="Stochastic Processes")
+        st.Page("pages/stochastic_processes.py", title="Stochastic Processes - Introduction"),
+        st.Page("pages/stochastic_processes_ii.py", title="Stochastic Processes - Stopping Times")
     ],
     "Projects" :[
     ],
