@@ -54,8 +54,8 @@ st.subheader("Data Collection Notes")
 st.markdown("""
 
 It is important to note that this data is only representative of people that I approached and had a meaningful interaction with
-or vice-versa. Therefore, this is not necesarily indicative of the entire travelling population. Factors such as my
-rudeimentary Spanish, joining English-speaking tours and generally seeking out people of a similar demographic to myself will bias this
+or vice-versa. Therefore, this is not necessarily indicative of the entire travelling population. Factors such as my
+rudimentary Spanish, joining English-speaking tours and generally seeking out people of a similar demographic to myself will bias this
 data heavily. 
 
 What constitutes as a meaningful interaction? Simply whether I remembered the person when it came to updating the log, usually 2-4 weeks from the date of us meeting.
@@ -64,16 +64,16 @@ What constitutes as a meaningful interaction? Simply whether I remembered the pe
 st.header("Who Did I Meet on Average?")
 
 st.markdown("""
-Taking a form of average for each column, the average person I met was:         
+Taking a form of average for each column, the _average_ person I met was:         
             """)
 
 st.write(f"""
-Most common country = {df.country_origin.mode()[0]} \n
+Most Common Country = {df.country_origin.mode()[0]} \n
 Median Age = {df.age.median():.2f} \n
 Most Common Sex = {df.sex.mode()[0]} \n
-Travelling as = {df.travelling_as.mode()[0]} \n
-Most Likely to meet in/on = {df.location_met.mode()[0]} \n
-How often did we meet = {df.times_met.mode()[0]}
+Travelling As = {df.travelling_as.mode()[0]} \n
+Most Likely to Meet in/on = {df.location_met.mode()[0]} \n
+How Often Did We Meet = {df.times_met.mode()[0]}
 """)
 
 st.markdown("""
@@ -82,13 +82,13 @@ While taking various forms of averages across different categories isn't always 
 
 st.title("Geography")
 st.markdown("""
-As mentioned in the introduction, with the exception of the Countries I visited, 
-the map consists almost entirely of countries that are well-developed and have a high proportion of English sepakers.
+When plotting the nationalities of fellow travellers on a Cloropleth Map, it can be seen that people I met tend to be from countries
+that are well-developed economically and culturally similar to the UK.
             
 Some surprises for me were 
-1) Not meeting anybody from either Asia (not including Russia and Turkey) or Africa.
-2) The number of Israelis I met (9) especially considering many do not have a level of English to be confident with AND groups of Israelis often stick together in hostels. This was a common complaint of those that I befriended.
-3) Not meeting any Irish for the first 5 months until I was on a tour with a group of 6 of them.
+1) Not meeting anybody from either Africa or Asia (not including Russia and Turkey).
+2) The number of Israelis I met (9) especially considering many do not have a level of English to converse confidently and groups of Israelis often stick together in hostels. This was a common complaint of those that I befriended.
+3) Not meeting any Irish people for the first 5 months until I was on a tour with a group of 6 of them.
             """)
 
 
@@ -182,7 +182,7 @@ fig_2.update_layout(
 st.plotly_chart(fig_2)
 
 st.markdown("""
-Each country looks roughly proportional to the amount of time I spent in each, however, my experiences were rather different from Country to Country:
+Each country looks roughly proportional to the amount of time I spent in each, however, my experiences were rather different from country to country:
             
 <ul>
             <li> In <b>Peru</b> my main activities were Spanish School and the Salkantay trek, both of which meant spending considerable time with the same people.
@@ -254,12 +254,16 @@ figa, axa = plt.subplots(figsize=(12, 6))
 sns.swarmplot(data=df, x="age", y="sex", ax=axa)
 
 # Calculate y position for the circle based on the 'sex' category
-y_positions = {'M': 0, 'F': 1}  # Adjust these based on your actual data
-circle_y = y_positions['F']  # Example, adjust based on selection or logic
+circle_center = (0, 15)  # Set this to the desired center of the circle (x, y)
+circle_radius = 3        # Set the desired radius of the circle
+circle_color = 'red'     # Circle color
 
-# Adding a circle to the plot
-circle = Circle((0, 0), 0.2, color='red', fill=False, linewidth=1)  # Example position and size
+# Create a circle
+circle = Circle(circle_center, circle_radius, color=circle_color, fill=False, linewidth=2)
+
+# Get current axis and add circle to it
 axa.add_patch(circle)
+
 
 # Set labels
 plt.xlabel("Age")
