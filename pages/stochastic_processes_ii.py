@@ -49,9 +49,10 @@ Introduction
 """)
 
 st.markdown(r"""
-In the previous notebook, we looked at modelling the European Roulette wheel as a stochastic process and analysed some of the properties of the expected distribution of final player balances.
+In the introduction to stochastic processes we looked at modelling the European Roulette wheel as a stochastic process and analysed some of the properties of the expected distribution of final player balances.
 
-Rather than depending on a few simulated outcomes, we can instead look to sample the underlying distributions that describe the data and draw on more Stochastic Process Theory to study how a stop-gap would affect the casino's profitability.
+A base assumption was that both the casino and the customer would continue to transact infinitely which is not true in practice. If we assume that
+the customer is constricted by some budget. If the stochastic process is stopped by the balance hitting an upper or lower bound, this is known as a _stopping time._
 """)
 
 st.header("""
@@ -95,6 +96,8 @@ $$ F_0 ⊆ F_1 \subseteq F_2 ... ⊆ F_t $$
 st.markdown(r"""
 ## Practical Examples
 
+We can calculate the expected amount of time until the player has spent all of a given budget. This is
+ known as the _gambler's ruin problem._
 
 ### 1.1 Bankruptcy Colours Betting
 
@@ -209,5 +212,12 @@ $$
 \mathbb{E}[\tau] = \frac{X_0}{|b\cdot(R \cdot p-1)|}  = \frac{100}{|1\cdot\left(36 \cdot \left(\frac{1}{37} -1\right)\right)|} = \frac{100}{0.027} \approx 3703
 $$
 
-**Hold on** that's the same result that we had for betting on colours. This is perhaps to be expected since the individual expected result of each spin is the same, and so the expected time to bankruptcy should also be the same. We know in practice customers are likely to be sensitive to big swings in balance, so the *variance* of stopping times might be more important to analyze.
+**Hold on** that's the same result that we had for betting on colours. 
+            
+This is perhaps to be expected since the individual expected result of each spin is the same, and so the expected time to bankruptcy 
+should also be the same. We know in practice customers are likely to be sensitive to big swings in balance, so the *variance* of
+stopping times might be more important to analyze.
+
+The whole distribution would be useful, however, I'm not finding good information on how
+to derive this so I will pause for the time being and take a simulation based approach.
 """, unsafe_allow_html=True)

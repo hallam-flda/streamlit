@@ -16,6 +16,7 @@ pages = {
         st.Page("pages/stochastic_processes_ii.py", title="Stochastic Processes - Stopping Times")
     ],
     "Projects" :[
+        st.Page("pages/european_roulette_sims.py", title="European Roulette Simulations")
     ],
     "Personal":[
         st.Page("pages/travel_friends.py", title = "Travel Friends")
