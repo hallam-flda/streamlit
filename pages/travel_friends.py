@@ -704,19 +704,46 @@ st.pyplot(fig_lmet)
 st.markdown("""
 Some of these are self-explanatory but I will explain those that are more interesting than others.
             
-#### What is Wallyball?
+#### Wallyball
 
-Wallyball is a variant of Volleyball played inside where the width and length of the normal size volleyball pitch
+<a href="https://www.youtube.com/watch?v=88iHgCwVzV0&ab_channel=BRICTV">Wallyball</a> is a variant of Volleyball played inside where the width and length of the normal size volleyball pitch
 are contained by walls. You are allowed to use any part of your body and the ball is always in play as long as it doesn't hit
 the back wall or floor before any other surface.
-""")
 
-st.title("Outliers")
+We played as part of my Spanish School in Sucre, Bolivia and somebody brought along a friend who I got to know better later on.
+            
+""", unsafe_allow_html=True)
 
+with st.expander("See Wallyball"):
+    st.image("media/ezgif-5d6b19265fa17a.gif", caption="Winning a point in wallyball with my foot.")
 
 st.markdown("""
 
-           """)
+#### Thermal Baths
+
+After some long trekking days and while staying in a particularly dull town in Chilean Patagonia, I decided to treat myself to a trip to the local thermal bath. I decided to run to the venue but it was longer than I anticipated.
+Fortunately I met a lovely Belgian couple in one of the pools who gave me a lift back to town in their campervan. I would go on to meet them again by chance in Sucre, Bolivia.
+
+
+#### Hitchhiking
+
+I depended a lot on hitchhiking while exploring Patagonia. Not only are buses fairly infrequent but they often don't stop exactly where you want them to and they can work out very expensive.
+Hitchhiking has the benefit of being free but also providing a good opportunity to practice language skills and make friends. Obviously I recognise my privilige as a male, but I strongly recommend it as a means of transport
+in this part of the world. 
+            
+That being said, you are never guaranteed a lift and for some of the harder to reach destinations, I felt it best to rent my own car for 4 days. During this time it was only right that I returned the favour of picking up hitchhikers
+I saw along the way.
+            
+One of the passengers I picked up in a remote part of Chilean Patagonia, I later met up with for lunch at a food market in Sucre, Bolivia.
+                    
+#### Girlfriend
+
+I met my girlfriend the first time I went to Buenos Aires in March 2023. I then returned to BA on two more occasions and through her was able to meet far more 'real' Argentinians than I would have been able to otherwise. 
+
+
+            
+""", unsafe_allow_html=True)
+
 
 st.subheader("Appendix - Full Dataset")
 with st.expander("Source Data"):
