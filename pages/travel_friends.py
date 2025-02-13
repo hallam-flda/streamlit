@@ -13,6 +13,16 @@ df = pd.read_csv("data/data/people_names_redacted.csv")
 
 st.title("Travel Friends")
 
+with st.expander("Packages Used"):
+    st.code("""
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+            """)
+
 st.header("Introduction")
 st.write("""Between 6th January 2023 and 20th July 2023 I travelled through 4 countries in South America: Peru, Chile, Argentina and Bolivia. My original plan
 was to spend a few weeks in Spanish school in Lima, Peru before venturing into Patagonia with my backpack and my tent.
@@ -82,7 +92,7 @@ While taking various forms of averages across different categories isn't always 
 
 st.title("Geography")
 st.markdown("""
-When plotting the nationalities of fellow travellers on a Cloropleth Map, it can be seen that people I met tend to be from countries
+When plotting the nationalities of fellow travellers on a Choropleth Map, it can be seen that people I met tend to be from countries
 that are well-developed economically and culturally similar to the UK.
             
 Some surprises for me were 
@@ -96,19 +106,19 @@ Some surprises for me were
 country_counts = df['country_origin'].value_counts().reset_index()
 country_counts.columns = ['Country', 'Counts']
 
-# Assuming country_counts is already defined
+# Create choropleth figure
 fig = px.choropleth(
     country_counts, 
     locations="Country",
     locationmode='country names',
     color="Counts",
     hover_name="Country",
-    color_continuous_scale=px.colors.sequential.Viridis,  # A more subtle color scale
+    color_continuous_scale=px.colors.sequential.Viridis, 
     labels={'Counts':'People Met'}
 )
 
 fig.update_geos(
-    visible=False,  # Turn off the default geography visibility
+    visible=False,  
     showcountries=True,  # Show country borders
     countrycolor="LightGrey"  # Set country border color to light grey
 )
@@ -118,11 +128,11 @@ fig.update_layout(
     title_x=0.4,
     dragmode = False,
     geo=dict(
-        lakecolor='White',  # Color of lakes
+        lakecolor='White', 
         showland=True,
         landcolor='White',
         showocean=True,
-        oceancolor='LightBlue',  # A subtle ocean color
+        oceancolor='LightBlue', 
         projection_type='equirectangular'
     ),
     font=dict(
@@ -133,6 +143,49 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig)
+    
+with st.expander("See Code"):
+    st.code('''
+# Aggregate data to count occurrences of each country
+country_counts = df['country_origin'].value_counts().reset_index()
+country_counts.columns = ['Country', 'Counts']
+
+# Create choropleth figure
+fig = px.choropleth(
+    country_counts, 
+    locations="Country",
+    locationmode='country names',
+    color="Counts",
+    hover_name="Country",
+    color_continuous_scale=px.colors.sequential.Viridis, 
+    labels={'Counts':'People Met'}
+)
+
+fig.update_geos(
+    visible=False,  
+    showcountries=True,  # Show country borders
+    countrycolor="LightGrey"  # Set country border color to light grey
+)
+
+fig.update_layout(
+    title_text='Nationality Count of Travellers I Met',
+    title_x=0.4,
+    dragmode = False,
+    geo=dict(
+        lakecolor='White', 
+        showland=True,
+        landcolor='White',
+        showocean=True,
+        oceancolor='LightBlue', 
+        projection_type='equirectangular'
+    ),
+    font=dict(
+        family="Arial, sans-serif",
+        size=12,
+        color="RebeccaPurple"
+    )
+)
+    ''')
 
 st.markdown("""
 Below is a plot of the number of travellers I met in each country I visited. Each country looks roughly proportional to the amount of time I spent in that country,
@@ -143,7 +196,7 @@ however, when toggling to people met per day, it can be seen that I met almost t
 country_counts_met = df['country_met'].value_counts().reset_index()
 country_counts_met.columns = ['Country', 'Counts']
 
-# Assuming country_counts is already defined
+# Second Choropleth plot
 fig_2 = px.choropleth(
     country_counts_met, 
     locations="Country",
@@ -155,8 +208,8 @@ fig_2 = px.choropleth(
 )
 
 fig_2.update_geos(
-    visible=False,  # Turn off the default geography visibility
-    showcountries=True,  # Show country borders
+    visible=False,  
+    showcountries=True,  
     countrycolor="LightGrey",
     scope='south america'  
 )
@@ -166,11 +219,11 @@ fig_2.update_layout(
     title_x=0.4,
     dragmode = False,
     geo=dict(
-        lakecolor='White',  # Color of lakes
+        lakecolor='White',  
         showland=True,
         landcolor='White',
         showocean=True,
-        oceancolor='LightBlue',  # A subtle ocean color
+        oceancolor='LightBlue', 
         projection_type='equirectangular'
     ),
     font=dict(
@@ -236,6 +289,108 @@ country_met_map_output = st.toggle("Per Day", False)
 
 st.plotly_chart(fig_people_met_per_day if country_met_map_output else fig_2)
 
+with st.expander("See Code"):
+    st.code('''
+# Aggregate data to count occurrences of each country
+country_counts_met = df['country_met'].value_counts().reset_index()
+country_counts_met.columns = ['Country', 'Counts']
+
+# Second Choropleth plot
+fig_2 = px.choropleth(
+    country_counts_met, 
+    locations="Country",
+    locationmode='country names',
+    color="Counts",
+    hover_name="Country",
+    color_continuous_scale=px.colors.sequential.Viridis,  # A more subtle color scale
+    labels={'Counts':'People Met'}
+)
+
+fig_2.update_geos(
+    visible=False,  
+    showcountries=True,  
+    countrycolor="LightGrey",
+    scope='south america'  
+)
+
+fig_2.update_layout(
+    title_text='Location of Meeting Place',
+    title_x=0.4,
+    dragmode = False,
+    geo=dict(
+        lakecolor='White',  
+        showland=True,
+        landcolor='White',
+        showocean=True,
+        oceancolor='LightBlue', 
+        projection_type='equirectangular'
+    ),
+    font=dict(
+        family="Arial, sans-serif",
+        size=12,
+        color="RebeccaPurple"
+    )
+)
+
+# Aggregate data for a count of people met per country
+df_country_duration = pd.read_csv("data/data/days_in_countries.csv")
+df_country_duration = df_country_duration.groupby(["country"]).sum()
+df_country_duration = df_country_duration["days_spent"].copy()
+df_country_duration = df_country_duration.sort_values(ascending=False)
+
+# Merge the two data sets
+df_countries_merged = pd.merge(country_counts_met,df_country_duration,'inner', left_on = "Country", right_on = "country")
+
+# Create new column for pm/pd
+df_countries_merged["people_met_per_day"] = df_countries_merged["Counts"]/df_countries_merged["days_spent"]
+
+
+fig_people_met_per_day = px.choropleth(
+    df_countries_merged, 
+    locations="Country",
+    locationmode='country names',
+    color="people_met_per_day",
+    hover_name="Country",
+    color_continuous_scale=px.colors.sequential.Viridis, 
+    labels={'Counts':'People Met Per Day'}
+)
+
+fig_people_met_per_day.update_geos(
+    visible=False,  # Turn off the default geography visibility
+    showcountries=True,  # Show country borders
+    countrycolor="LightGrey",
+    scope='south america'  
+)
+
+fig_people_met_per_day.update_layout(
+    title_text='People Met Per Day',
+    title_x=0.4,
+    dragmode = False,
+    geo=dict(
+        lakecolor='White',  # Color of lakes
+        showland=True,
+        landcolor='White',
+        showocean=True,
+        oceancolor='LightBlue',  # A subtle ocean color
+        projection_type='equirectangular'
+    ),
+    font=dict(
+        family="Arial, sans-serif",
+        size=12,
+        color="RebeccaPurple"
+    ),
+    coloraxis_colorbar=dict(
+        title=" "
+    )
+)
+
+# Toggle to change to per day view.
+country_met_map_output = st.toggle("Per Day", False)
+
+# Default behaviour is to show totals, per day will be passed when toggle is on
+st.plotly_chart(fig_people_met_per_day if country_met_map_output else fig_2)
+            ''')
+
 st.markdown("""
 It is hard to specify when this might be as my experiences were rather different from country to country:
             
@@ -261,26 +416,48 @@ st.markdown("""
 In general I found the average traveller to be of a similar age to myself but I did meet some older people. The boxplot below shows the distribution of age split by sex.
             """)
 
+# Copy of original data frame
 df_age_boxplot = df.copy()
+# Similar to a case when statement, if the location met is in two main categories then remain the same, bucket everything else into other
 df_age_boxplot['location_grouped'] = np.where(df_age_boxplot['location_met'].isin(['Accomodation','Tour']), df['location_met'], 'Other')
 
+# List created for ordering plot
 categories_ordered = ['Accomodation', 'Tour', 'Other']
+
+# Creating functions for every plot allows for lazy naming conventions wrt 'fig' etc. Review whether this is appropriate
 def sns_stripplot(df, ordered = None, dodge_toggle = False):
-    # Ensure you are creating a figure with plt.figure() and not calling plt as a function
     fig = plt.figure(figsize=(12, 6))
-    # sns.stripplot is correctly used here as a function call
     sns.swarmplot(data=df, x="age", y="location_grouped", hue="sex", dodge = dodge_toggle, order = ordered)#, jitter = True)
     plt.xlabel("Age")
     plt.ylabel("Location Met")
-
-
     return fig
 
-# Correct usage of the defined function to generate a figure
+# Now assign a variable name to the complete plot
 fig_boxplot = sns_stripplot(df=df_age_boxplot, ordered = categories_ordered)
 st.pyplot(fig_boxplot)
 
-df_age_boxplot_accom = df_age_boxplot[df_age_boxplot['location_met']=="Accomodation"]
+with st.expander("See Code"):
+    st.code('''
+# Copy of original data frame
+df_age_boxplot = df.copy()
+# Similar to a case when statement, if the location met is in two main categories then remain the same, bucket everything else into other
+df_age_boxplot['location_grouped'] = np.where(df_age_boxplot['location_met'].isin(['Accomodation','Tour']), df['location_met'], 'Other')
+
+# List created for ordering plot
+categories_ordered = ['Accomodation', 'Tour', 'Other']
+
+# Creating functions for every plot allows for lazy naming conventions wrt 'fig' etc. Review whether this is appropriate
+def sns_stripplot(df, ordered = None, dodge_toggle = False):
+    fig = plt.figure(figsize=(12, 6))
+    sns.swarmplot(data=df, x="age", y="location_grouped", hue="sex", dodge = dodge_toggle, order = ordered)#, jitter = True)
+    plt.xlabel("Age")
+    plt.ylabel("Location Met")
+    return fig
+
+# Now assign a variable name to the complete plot
+fig_boxplot = sns_stripplot(df=df_age_boxplot, ordered = categories_ordered)
+st.pyplot(fig_boxplot)
+    ''')
 
 st.markdown("""
 Something that immediately catches my eye here is the number of entries at age = 27. This is likely because I did not ask everybody their age and often had to make an
@@ -292,40 +469,170 @@ Something else that catches my eye is the strange clustering between males and f
 swarm plot focuses on just this category with a toggle to separate the sexes onto different lines
                         """)
 
+# Create toggle for splitting by sex
+# this works because in the function we set the hue to sex and added an optional dodge toggle argument
 dodge_output = st.toggle("Separate", False)
+
+# Filter just for those met in accommodation
+df_age_boxplot_accom = df_age_boxplot[df_age_boxplot['location_met']=="Accomodation"]
 fig_boxplot_2 = sns_stripplot(df=df_age_boxplot_accom, dodge_toggle = dodge_output)
 st.pyplot(fig_boxplot_2)
+
+with st.expander("See Code"):
+    st.code("""
+# Create toggle for splitting by sex
+# this works because in the function we set the hue to sex and added an optional dodge toggle argument
+dodge_output = st.toggle("Separate", False)
+
+# Filter just for those met in accommodation
+df_age_boxplot_accom = df_age_boxplot[df_age_boxplot['location_met']=="Accomodation"]
+fig_boxplot_2 = sns_stripplot(df=df_age_boxplot_accom, dodge_toggle = dodge_output)
+st.pyplot(fig_boxplot_2)
+""")
 
 st.markdown("""
 When the toggle is on, it looks as if we have two clusters for females, young twenties and older twenties, whereas males
 tend to have a more normal distirbution centred around the mid-20s (with an additional peak at 30).
 """)
 
-options = ["Baby", "Septuagenarians"]
-selection = st.radio("Outlier Choice", options)  # Using radio for a better example
+options = ["Baby", "Golf", "Retiree"]
+# selection = st.radio("Outlier Explainer", options)
+selection = st.pills("Outlier Explainer", options, selection_mode="single")
 
-# Create a figure for the swarm plot
 figa, axa = plt.subplots(figsize=(12, 6))
 sns.swarmplot(data=df, x="age", y="sex", ax=axa)
 
-# Calculate y position for the circle based on the 'sex' category
-circle_center = (0, 15)  # Set this to the desired center of the circle (x, y)
-circle_radius = 3        # Set the desired radius of the circle
-circle_color = 'red'     # Circle color
+if selection == "Baby":
+    axa.annotate(
+        "Baby of German couple on joint mat/pat leave \n met when they picked me up at the side of the road.",
+        xy=(0, 0),  
+        xycoords='data',
+        xytext=(-10, -90), 
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    )
 
-# Create a circle
-circle = Circle(circle_center, circle_radius, color=circle_color, fill=False, linewidth=2)
+if selection == "Golf":
+     axa.annotate(
+        "Randomly paired with playing \n golf in Buenos Aires.",
+        xy=(75, 1),  # Point to F on the y-axis and age 0
+        xycoords='data',
+        xytext=(-250, 80),  
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    )
+     axa.annotate(
+        "",
+        xy=(73, 1),  
+        xycoords='data',
+        xytext=(-130, 70), 
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    ) 
+     axa.annotate(
+        "",
+        xy=(59, 1), 
+        xycoords='data',
+        xytext=(-40, 75),  
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    ) 
 
-# Get current axis and add circle to it
-axa.add_patch(circle)
+if selection == "Retiree":
+    axa.annotate(
+        "Recently retired Belgian lady on first \nsolo trip, had always wanted to hike \nin Patagonia but her husband had no \ninterest.",
+        xy=(68, 0),  
+        xycoords='data',
+        xytext=(-150, -90), 
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    )
 
-
-# Set labels
-plt.xlabel("Age")
-plt.ylabel("Sex")
-
+axa.set_xlabel("Age")
+axa.set_ylabel("Sex")
 
 st.pyplot(figa)
+
+with st.expander("See Code"):
+    st.code('''
+options = ["Baby", "Golf", "Retiree"]
+selection = st.pills("Outlier Explainer", options, selection_mode="single")
+
+figa, axa = plt.subplots(figsize=(12, 6))
+sns.swarmplot(data=df, x="age", y="sex", ax=axa)
+
+if selection == "Baby":
+    axa.annotate(
+        "Baby of German couple on joint mat/pat leave \n met when they picked me up at the side of the road.",
+        xy=(0, 0),  
+        xycoords='data',
+        xytext=(-10, -90), 
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    )
+
+if selection == "Golf":
+     axa.annotate(
+        "Randomly paired with playing \n golf in Buenos Aires.",
+        xy=(75, 1),  # Point to F on the y-axis and age 0
+        xycoords='data',
+        xytext=(-250, 80),  
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    )
+     axa.annotate(
+        "",
+        xy=(73, 1),  
+        xycoords='data',
+        xytext=(-130, 70), 
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    ) 
+     axa.annotate(
+        "",
+        xy=(59, 1), 
+        xycoords='data',
+        xytext=(-40, 75),  
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    ) 
+
+if selection == "Retiree":
+    axa.annotate(
+        "Recently retired Belgian lady on first \nsolo trip, had always wanted to hike \nin Patagonia but her husband had no \ninterest.",
+        xy=(68, 0),  
+        xycoords='data',
+        xytext=(-150, -90), 
+        textcoords='offset points',
+        arrowprops=dict(arrowstyle="->", color='red', linewidth=1.5),
+        fontsize=10,
+        color='red'
+    )
+
+axa.set_xlabel("Age")
+axa.set_ylabel("Sex")
+
+st.pyplot(figa)
+
+''')
 
 st.markdown("""
 However, when we look at age distribution for both sexes across all locations met, it becomes more apparent that
@@ -336,10 +643,13 @@ Since I may have more information or at least more confidence in guessing the ag
 st.title("Traveller Type")
 
 st.markdown("""
-Below is a bar chart of the different traveller types I categorised people into. Some of these are rather broad such as 'Resident' which encompasses those who lived, worked or studied in the country.
+Below is a bar chart of the different traveller types I categorised people into. Some of these are rather broad such as 'Resident' which encompasses those who were living, working or studying in the country.
            """)
 
+# Create a copy of the original df
 df_ttype = df.copy()
+
+# Case statement to group siblings into a family category
 df_ttype['travelling_as'] = np.where(df_ttype['travelling_as'].isin(['Siblings']), 'Family', df_ttype['travelling_as'])
 # size is useful to reduce to one column rather than having the same number of columns as the source df
 df_ttype = df_ttype.groupby(["travelling_as"]).size().reset_index(name='count')
@@ -350,12 +660,27 @@ plt.xlabel("Count")
 plt.ylabel("Traveller Type")
 st.pyplot(fig_ttype)
 
-st.markdown("""
-As a solo traveller you often go out of your way to meet other people. This is reflected in the data in both senses, I was looking for
-people to socialise with and other solo travellers were seeking me out.
+with st.expander("See Code"):
+    st.code("""
+# Create a copy of the original df
+df_ttype = df.copy()
 
-That being said, when travelling solo, you are approached far more often from those in groups/pairs
-(and more receptive to being approached) than when travelling with others. Usually the leading question is 'Are you travelling alone?'.
+# Case statement to group siblings into a family category
+df_ttype['travelling_as'] = np.where(df_ttype['travelling_as'].isin(['Siblings']), 'Family', df_ttype['travelling_as'])
+# size is useful to reduce to one column rather than having the same number of columns as the source df
+df_ttype = df_ttype.groupby(["travelling_as"]).size().reset_index(name='count')
+
+fig_ttype = plt.figure(figsize =(12,6))
+sns.barplot(df_ttype, x="count", y = 'travelling_as', order = ["Family","Couple","Resident","Friends","Solo"])
+plt.xlabel("Count")
+plt.ylabel("Traveller Type")
+st.pyplot(fig_ttype)
+            """)
+
+st.markdown("""
+That being said, when traveling solo, you are approached far more often by those in groups or pairs 
+(and are more receptive to being approached) than when traveling with others.
+ Usually, the leading question is, 'Are you traveling alone?'
 """)
 
 st.title("Meeting Method")
@@ -375,6 +700,16 @@ sns.barplot(df_lmet, x="count", y = 'location_met')
 plt.xlabel("Count")
 plt.ylabel("Location Met")
 st.pyplot(fig_lmet)
+
+st.markdown("""
+Some of these are self-explanatory but I will explain those that are more interesting than others.
+            
+#### What is Wallyball?
+
+Wallyball is a variant of Volleyball played inside where the width and length of the normal size volleyball pitch
+are contained by walls. You are allowed to use any part of your body and the ball is always in play as long as it doesn't hit
+the back wall or floor before any other surface.
+""")
 
 st.title("Outliers")
 
