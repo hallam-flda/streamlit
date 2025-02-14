@@ -55,6 +55,9 @@ In the introduction to stochastic processes we looked at modelling the European 
 
 A base assumption was that both the casino and the customer would continue to transact infinitely which is not true in practice. If we assume that
 the customer is constricted by some budget. If the stochastic process is stopped by the balance hitting an upper or lower bound, this is known as a _stopping time._
+            
+In turn, the distribution of final balances will no longer follow a normal distribution. Instead we will have peaks
+at either limit _if_ the limit is likely to be hit given a starting balance and some budget constraints.
 """)
 
 st.header("""

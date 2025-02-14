@@ -752,7 +752,7 @@ st.pyplot(pdf_plot)
 
 st.header("Example Usage")
 
-st.markdown(r"""Given what we know about the distribution for the standard colour choice of european roulette what is the probability that after 1000
+st.markdown(r"""Given what we know about the distribution for the standard colour choice of european roulette what is the probability that after 1000 spins
             your balance is **either** < -£75 or > £25
             
 First we subsitute in the value of t to our general normal distribution formula
