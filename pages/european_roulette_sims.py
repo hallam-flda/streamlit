@@ -1,4 +1,6 @@
 # Import necessary packages
+
+
 from matplotlib import pyplot as plt
 import numpy as np
 import random
@@ -6,21 +8,33 @@ import seaborn as sns
 import pandas as pd
 import streamlit as st
 
+
 def european_roulette_colour_betting(max_spins, starting_balance):
     spins = 0
     balance = starting_balance
     while balance > 0 and spins < max_spins:
-        if np.random.rand() < 0.486:  # Probability for red/black in European roulette
+        if np.random.rand() < 0.48649:  # Probability for red/black in European roulette
             balance += 1
         else:
             balance -= 1
         spins += 1
     return spins
 
-def simulate_bankruptcy(customers, max_spins, starting_balance):
+def european_roulette_number_betting(max_spins, starting_balance):
+    spins = 0
+    balance = starting_balance
+    while balance > 0 and spins < max_spins:
+        if np.random.rand() < 0.02703:  # Probability for red/black in European roulette
+            balance += 35
+        else:
+            balance -= 1
+        spins += 1
+    return spins
+
+def simulate_bankruptcy(customers, max_spins, starting_balance, game):
     spins_to_bankruptcy = []
     for i in range(customers):
-        customer_spins = european_roulette_colour_betting(max_spins, starting_balance)
+        customer_spins = game(max_spins, starting_balance)
         spins_to_bankruptcy.append(customer_spins)
         progress_bar.progress((i + 1) / customers)  # Update the progress bar
     return spins_to_bankruptcy, starting_balance
@@ -40,6 +54,7 @@ def plot_simulation(spins_to_bankruptcy, starting_balance):
 
     return fig
 
+
 st.title("European Roulette Simulations")
 
 st.write("""
@@ -53,7 +68,7 @@ After the first attempt to simulate data for calculating stopping times I felt i
 One way is to simulate the amount of time taken to hit the stopping condition and fitting a distribution to that data.
 
 ### **Warning**
-While the expectation for any supermartingale is that eventually the gambler's balance will go to zero, this could take a very large number of spins. I would want to restrict the number of spins a gambler can have as I did in the first simulation notebook. I don't know how this will affect the distribution (other than to create a second peak at the spin limit where variability is high).
+While the expectation for any supermartingale is that eventually the gambler's balance will go to zero, this could take a very large number of spins. I would want to restrict the number of spins a gambler can have. I don't know how this will affect the distribution (other than to create a second peak at the spin limit where variability is high).
 """)
 
 st.markdown(r"""
@@ -129,7 +144,7 @@ with st.expander("Run My Own Simulation"):
                                         min_value = 10, max_value = 100, step = 10
     )
     progress_bar = st.progress(0)  # Initialize the progress bar
-    spins_to_bankruptcy, starting_balance_sim = simulate_bankruptcy(graph_sims, 50000, graph_starting_balance)
+    spins_to_bankruptcy, starting_balance_sim = simulate_bankruptcy(graph_sims, 50000, graph_starting_balance, game = european_roulette_colour_betting)
     sim_plot = plot_simulation(spins_to_bankruptcy, starting_balance_sim)
     st.pyplot(sim_plot)
     progress_bar = st.empty() 
@@ -157,16 +172,26 @@ Not sure if this is scientifically sound but it's just to validate any AI output
 
 # This takes a long time to run, save the output to drive and then load rather than simming every time
 
+df = pd.read_csv("data/data/sim_results.csv")
+df.rename(columns={df.columns[0]: "Summary Statistic" }, inplace = True)
 
-# df = pd.read_csv("data/data/sim_results.csv")
-# df.rename(columns={df.columns[0]: "Summary Statistic" }, inplace = True)
+# Convert numeric columns to integers (good enough for this use case)
+df.iloc[:, 1:] = df.iloc[:, 1:].astype(float)
+df.iloc[:, 1:] = df.iloc[:, 1:].round(2)
 
-# formatted_df = df.style.format('{:,.0f}')
+# Rotate the dataframe for easier viewing
+df = df.transpose()
+# Rename the columns to the first row (because it was the first column)
+df.columns = df.iloc[0]  
+df = df.iloc[1:]
 
-# # Display the formatted DataFrame
-# st.dataframe(formatted_df)
+df.loc['Mean'] = df.mean()
 
-# # Display the type of the third column
-# col_type = df.dtypes[2]
+# Amazingly this is the only solution I can find to not get
+# the table left aligning on the page
+col1, col2, col3 = st.columns([1, 2, 1])  # Adjust ratios as needed
 
-# st.write(f"The type of the third column is: {col_type}")
+with col2:
+    st.dataframe(df)
+
+

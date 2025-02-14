@@ -221,3 +221,50 @@ stopping times might be more important to analyze.
 The whole distribution would be useful, however, I'm not finding good information on how
 to derive this so I will pause for the time being and take a simulation based approach.
 """, unsafe_allow_html=True)
+
+
+st.markdown(r"""
+## Deepseek
+
+The following answer for variance came from DeepSeek and looks to align with the result I got from simulations.
+
+The variance of stooping time in the gambler's ruin problem can be computed using the formula:
+
+<br>
+
+$$
+             \mathrm{Var}(\tau) = \frac{X_0 \cdot (1 - (q - p)^2)}{(q - p)^3} 
+$$
+
+<br>
+
+I would like to find a proof for this before I base inference using it. For the time being let's just substitute in the values we're interested in. We know from the expected formula that $ q - p = \frac{19}{37} - \frac{18}{37} = \frac{1}{37} = 0.027$ therefore we have:
+
+<br>
+
+$$
+             \mathrm{Var}(\tau) = \frac{100 \cdot (1 - (0.027)^2)}{(0.027)^3} = 5,075,000 \text{ spins}
+$$
+
+<br>
+
+and for standard deviation
+
+<br>
+
+$$ 
+\mathrm{St.Dev}(\tau) = \sqrt{5,075,000} = 2252.8 \text{ spins}
+$$
+
+<br>
+
+Which aligns nicely with our simulated outcomes. But then what if we use the same formula for number betting where $q-p = \frac{36}{37}-\frac{1}{37} = \frac{35}{37}$
+
+<br>
+
+$$
+ \mathrm{Var}(\tau) = \frac{100 \cdot (1 - (0.945)^2)}{(0.945)^3} = 12.68 \text{ spins} 
+$$
+""",unsafe_allow_html=True)
+
+
