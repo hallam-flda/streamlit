@@ -6,34 +6,46 @@ import seaborn as sns
 import pandas as pd
 import streamlit as st
 
-# Define the colours betting game with a list to track balance and number of spins (t)
-def european_roulette_colour_betting(max_number_of_spins, starting_balance):
-    balance = []
-    t = [0]
-    running_balance = starting_balance
-    running_t = 0
-
-    for _ in range(max_number_of_spins):
-        if running_balance <= 0:  # Stop if bankrupt
-            break
-        outcome = random.randint(0, 36)
-
-        # Assume 18/37 outcomes are wins (e.g., red or black)
-        if outcome in range(0, 18):  # Winning outcomes
-            running_balance += 1  # Win pays 1 unit
+def european_roulette_colour_betting(max_spins, starting_balance):
+    spins = 0
+    balance = starting_balance
+    while balance > 0 and spins < max_spins:
+        if np.random.rand() < 0.486:  # Probability for red/black in European roulette
+            balance += 1
         else:
-            running_balance -= 1  # Lose 1 unit
+            balance -= 1
+        spins += 1
+    return spins
 
-        # Track balance and time
-        balance.append(running_balance)
-        running_t += 1
-        t.append(running_t)
+def simulate_bankruptcy(customers, max_spins, starting_balance):
+    spins_to_bankruptcy = []
+    for i in range(customers):
+        customer_spins = european_roulette_colour_betting(max_spins, starting_balance)
+        spins_to_bankruptcy.append(customer_spins)
+        progress_bar.progress((i + 1) / customers)  # Update the progress bar
+    return spins_to_bankruptcy, starting_balance
 
-    spins_to_bankruptcy = running_t if running_balance <= 0 else max_number_of_spins  # None if not bankrupt
-    return t, balance, spins_to_bankruptcy
+def plot_simulation(spins_to_bankruptcy, starting_balance):
+    mean_spins = np.mean(spins_to_bankruptcy)
+    var_spins = np.var(spins_to_bankruptcy, ddof=1)
+    st_dev_spins = np.std(spins_to_bankruptcy, ddof=1)
+
+    fig = plt.figure(figsize=(12, 6))
+    sns.kdeplot(spins_to_bankruptcy, label=f'$\mathbb{{E}}_0[\\tau] =$ {mean_spins:.0f}, $\sigma_0^{2}[\\tau] = {var_spins:.0f}$, $\sigma_0[\\tau] = {st_dev_spins:.0f}$', clip=(100, None))
+    plt.title(f"Simulation of spins to bankruptcy for starting balance = {starting_balance}")
+    plt.xlabel('Number of Spins')
+    plt.ylabel('Density')
+    plt.legend()
+    plt.show()
+
+    return fig
+
 st.title("European Roulette Simulations")
 
 st.write("""
+
+_Note: The default plots and data on this page are saved runs from previous results, I have included the relevant code so you can
+run your own simulations if you want but this can take some time to run._         
 
 ## **Introduction**
 After the first attempt to simulate data for calculating stopping times I felt it would be better to use a statistical approach so that I could generate a distribution for the expected stopping time (bankruptcy or a top threshold). However, I have not been able to find a good source that shows how to do this.
@@ -69,28 +81,60 @@ But the solution for $\mathrm{Var}[\tau]$ is less clear.
 for what the variance is wasn't as simple so instead I'll take the sample variance and st.dev from a simulation for 10,000 customers. 
       """, unsafe_allow_html=True)
 
-spins_to_bankruptcy = []
-STARTING_BALANCE = 100
-CUSTOMERS = 10000
-MAX_SPINS = 50000
 
-for i in range(CUSTOMERS):
-  spin_list, customer_balance, customer_spins = european_roulette_colour_betting(MAX_SPINS,STARTING_BALANCE)
-  spins_to_bankruptcy.append(customer_spins)
 
-mean_spins = np.mean(spins_to_bankruptcy)
-var_spins = np.var(spins_to_bankruptcy, ddof = 1)
-st_dev_spins = np.std(spins_to_bankruptcy, ddof = 1)
+# sim_x100_stopping_dist = f"""
+# spins_to_bankruptcy = []
+# STARTING_BALANCE = 10
+# CUSTOMERS = 1000
+# MAX_SPINS = 5000
 
-fig = plt.figure(figsize=(12, 6))
-sns.kdeplot(spins_to_bankruptcy, label=f'$\mathbb{{E}}_0[\\tau] =$ {mean_spins:.0f}, $\sigma_0^{2}[\\tau] = {var_spins:.0f}$, $\sigma_0[\\tau] = {st_dev_spins:.0f}$', clip=(100, None))
-plt.title(f"Simulation of spins to bankruptcy for starting balance = {STARTING_BALANCE}")
-plt.xlabel('Number of Spins')
-plt.ylabel('Density')
-plt.legend()
-plt.xlim(0,50000)
+# for i in range(CUSTOMERS):
+#   spin_list, customer_balance, customer_spins = european_roulette_colour_betting(MAX_SPINS,STARTING_BALANCE)
+#   spins_to_bankruptcy.append(customer_spins)
 
-st.pyplot(plt)
+# mean_spins = np.mean(spins_to_bankruptcy)
+# var_spins = np.var(spins_to_bankruptcy, ddof = 1)
+# st_dev_spins = np.std(spins_to_bankruptcy, ddof = 1)
+
+# fig = plt.figure(figsize=(12, 6))
+# sns.kdeplot(spins_to_bankruptcy, label=f'$\mathbb{{E}}_0[\\tau] =$ {mean_spins:.0f}, $\sigma_0^{2}[\\tau] = {var_spins:.0f}$, $\sigma_0[\\tau] = {st_dev_spins:.0f}$', clip=(100, None))
+# plt.title(f"Simulation of spins to bankruptcy for starting balance = {STARTING_BALANCE}")
+# plt.xlabel('Number of Spins')
+# plt.ylabel('Density')
+# plt.legend()
+# plt.xlim(0,50000)
+
+
+# st.pyplot(plt)
+# """
+
+import inspect
+
+
+
+st.image("media/distribution_of_stopping_time_x0_100.png")
+
+with st.expander("See Simulation Code"):
+    st.code(inspect.getsource(european_roulette_colour_betting) + '\n' + inspect.getsource(simulate_bankruptcy) + '\n' + inspect.getsource(plot_simulation))
+
+
+with st.expander("Run My Own Simulation"):
+    graph_sims = st.slider("Select Number of Customers",
+                       min_value=1000, max_value=10000, step=1000)
+    
+    # graph_trials = st.slider("Select Maximum Number of Spins",
+    #                      min_value=1000, max_value=10000, step=1000)
+    graph_starting_balance = st.slider("Select Starting Balance",
+                                        min_value = 10, max_value = 100, step = 10
+    )
+    progress_bar = st.progress(0)  # Initialize the progress bar
+    spins_to_bankruptcy, starting_balance_sim = simulate_bankruptcy(graph_sims, 50000, graph_starting_balance)
+    sim_plot = plot_simulation(spins_to_bankruptcy, starting_balance_sim)
+    st.pyplot(sim_plot)
+    progress_bar = st.empty() 
+
+
 
 st.markdown(r"""
 So for this simulation we have the following summary statistics of the distribution of stopping times.
@@ -100,19 +144,29 @@ So for this simulation we have the following summary statistics of the distribut
 
 | Statistic | Value |
 |:---:|:---:|
-| Sample Mean, $\mu$ | 3707 |
-| Sample Variance, $s^2$ | 4,937,662|
-| Sample St Dev, $s$ | 2,222 |
+| Sample Mean, $\mu$ | 3727 |
+| Sample Variance, $s^2$ | 5,244,957|
+| Sample St Dev, $s$ | 2,290 |
 
 </center>
 <br>
 
-But obviously this will change with every simulation, so to be sure this is a realistic estimate, I will simulate the same scenario but 10 times and take the average of the sample means and variances. Not sure if this is scientifically sound but it's just to validate any AI output.            
+But obviously this will change with every simulation, so to be sure this is a realistic estimate, I have simulated the same scenario but 10 times and take the average of the sample means and variances. 
+Not sure if this is scientifically sound but it's just to validate any AI output.            
            """ , unsafe_allow_html=True)
 
 # This takes a long time to run, save the output to drive and then load rather than simming every time
 
 
-df = pd.read_csv("data/data/sim_results.csv")
-pd.options.display.float_format = '{:,.0f}'.format 
-df
+# df = pd.read_csv("data/data/sim_results.csv")
+# df.rename(columns={df.columns[0]: "Summary Statistic" }, inplace = True)
+
+# formatted_df = df.style.format('{:,.0f}')
+
+# # Display the formatted DataFrame
+# st.dataframe(formatted_df)
+
+# # Display the type of the third column
+# col_type = df.dtypes[2]
+
+# st.write(f"The type of the third column is: {col_type}")

@@ -496,7 +496,6 @@ tend to have a more normal distirbution centred around the mid-20s (with an addi
 """)
 
 options = ["Baby", "Golf", "Retiree"]
-# selection = st.radio("Outlier Explainer", options)
 selection = st.pills("Outlier Explainer", options, selection_mode="single")
 
 figa, axa = plt.subplots(figsize=(12, 6))
