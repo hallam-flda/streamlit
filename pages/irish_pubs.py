@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import requests
+import json
+from urllib.parse import urlencode
 
 st.title("Irish Pubs of Europe")
 
@@ -88,6 +90,126 @@ some locations with Irish Pubs but as previously mentioned, the costly API calls
 
 code_block_4 = """
 city_sample = select_cities.sort_values(['country','population'], ascending=False).groupby('country').head(10)
-city_sample
+st.dataframe(city_sample)
+"""
+st.code(code_block_4)
+exec(code_block_4)
+
+st.header("Querying Google Maps APIs")
+
+st.markdown("""
+The Nearby Search API used only returns a maximum of 20 results per search. With the exception of London (already excluded)
+I think we can assume it is unlikely any of these cities will have in excess of 20 Irish Pubs.
+
+Some extra data prep is required to make it easier to query the API
+           """)
+
+code_block_5 = """
+data_list = city_sample.apply(lambda row: {"city": row["city"], "location": (row["lat"], row["lng"])}, axis=1).tolist()
+st.write(f'{data_list[0]["location"]}' + ' - These tuples of lat lng combinations can now be passed to the API')
+"""
+
+st.code(code_block_5)
+exec(code_block_5)
+
+code_block_6 = """
+place_ids = []
+
+# This is expensive to run - do not run again 
+
+for i in range(1, len(data_list)):
+   search_endpoint_trim = "https://maps.googleapis.com/maps/api/place/nearbysearch/json"
+   params = {
+       "key" : MY_API_KEY,
+       "location" : f"{data_list[i]['location'][0]},{data_list[i]['location'][1]}",
+       "radius" : 10000,
+       "keyword" : "irish pub"
+   }
+   params_encoded = urlencode(params)
+   places_url = f"{search_endpoint_trim}?{params_encoded}"
+
+   r2 = requests.get(places_url)
+   result = r2.json()
+   place_ids.append(result)  # Append the 'result' to the 'results_list'   
+     
+"""
+
+st.code(code_block_6)
+
+st.markdown("""
+Results from the original run of this analysis have been saved into a JSON file to avoid re-running the query against the API.
+These have been loaded below and a list of place_ids to pass to a Place Details API.
+            """)
+
+code_block_7 = """
+with open('data/data/irish_pubs/data.json', 'r') as f:
+    place_ids = json.load(f)
+
+id_list = []
+
+for j in range(len(place_ids)):
+    for i in range(1, len(place_ids[j]['results'])):
+        #new_id = place_ids[j]['results'][i]['place_id']
+        id_list.append(place_ids[j]['results'][i]['place_id'])    
+
+st.write(id_list[:5])
+"""
+
+st.code(code_block_7)
+exec(code_block_7)
+
+code_block_8 = """
+places_endpoint = "https://maps.googleapis.com/maps/api/place/details/json"
+
+results_list = []
+
+for i in range(1,len(id_list)):
+
+    places_params = {
+        "key" : YOUR_API_KEY,
+        "place_id" : f"{id_list[i]}",
+        "fields" : "name,rating,geometry,place_id,rating,url,website,reviews"
+    }
+    place_params_encoded = urlencode(places_params)
+    details_url = f"{places_endpoint}?{place_params_encoded}"
+
+    r3 = requests.get(details_url)
+    result = r3.json()['result']
+    results_list.append(result)  # Append the 'result' to the 'results_list'
+
+with open('details_data.json', 'w') as f:
+    json.dump(results_list, f)
+
+"""
+
+st.code(code_block_8)
+
+code_block_9 = """
+with open('data/data/irish_pubs/details_data.json', 'r') as f:
+    results_list = json.load(f)
+
+df = pd.DataFrame(results_list)
+
+st.dataframe(df)
+"""
+
+st.code(code_block_8)
+exec(code_block_9)
+
+st.markdown("""
+Quite a lot of the results appear not to be Irish Pubs. The presence of McDonald's is particularly concerning.
+What I think is happening is Google will always return results even if it doesn't have any quality matches.
+
+In order to improve the accuracy, we can look for places that contian the words 'Irish' or 'Ireland'. While this may
+not be a foolproof method, it should remove erronous results like McDonald's.
+
+The first step to doing this is joining the two datasets. We can do this through the location information.
+            """)
+
+code_block_10 = """
+df2 = pd.json_normalize(df['geometry'])
+unnested_df = df.join(df2[["location.lat","location.lng"]])
+unnested_df.drop(columns="geometry", inplace=Trua
+unnested_df
 """
 
