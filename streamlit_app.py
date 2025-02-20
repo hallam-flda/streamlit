@@ -20,8 +20,11 @@ pages = {
         st.Page("pages/european_roulette_sims.py", title="European Roulette Simulations")
     ],
     "Personal":[
-        st.Page("pages/travel_friends.py", title = "Travel Friends"),
-        st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard")
+        st.Page("pages/travel_friends.py", title = "Travel Friends")#,
+        #st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard")
+    ],
+    "Ad-Hoc Analysis":[
+        st.Page("pages/irish_pubs.py", title = "Irish Pubs of Europe")
     ]
 
 }
