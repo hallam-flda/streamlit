@@ -1,10 +1,19 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import math
 import requests
 import json
 from urllib.parse import urlencode
 
 st.title("Irish Pubs of Europe")
+
+
+st.markdown("""
+<i> Originally written in December 2023, it looks as if Google Maps have updated their APIs since the time of writing.           
+            """, unsafe_allow_html=True)
+
+st.header("Introduction", divider = True)
 
 st.markdown("""
 <p> When travelling Europe for the first time in 2014, 
@@ -209,7 +218,207 @@ The first step to doing this is joining the two datasets. We can do this through
 code_block_10 = """
 df2 = pd.json_normalize(df['geometry'])
 unnested_df = df.join(df2[["location.lat","location.lng"]])
-unnested_df.drop(columns="geometry", inplace=Trua
+unnested_df.drop(columns="geometry", inplace=True)
 unnested_df
+st.dataframe(unnested_df.head())
+"""
+st.code(code_block_10)
+exec(code_block_10)
+
+st.markdown(
+    """Now from this joined dataset we want to remove any locations that do not have 'bar' listed in the 'type' field"""  
+)
+
+code_block_11 = """
+# find all the entries that do not list bar as one of the types
+remove_list = []
+
+for i in range(1,len(place_ids)):
+    establishment = place_ids[i]['results']
+    for j in range(1,len(establishment)):
+        if 'bar' not in establishment[j]['types']:
+            remove_list.append(establishment[j]['place_id'])
+
+# same dataframe as the start but remove all the places that aren't of type 'bar'
+pub_df = df[~df['place_id'].isin(remove_list)]
+
+# index stays the same so need to reset in order to make the later join work
+pub_df.reset_index(inplace=True, drop = True)
+
+# unnest the dictionary for location data
+df2 = pd.json_normalize(pub_df['geometry'])
+# join new df onto existing df using the index (by default)
+unnested_df = pub_df.join(df2[["location.lat","location.lng"]])
+# drop the old nested column
+unnested_df.drop(columns="geometry", inplace=True)
+# drop any duplicates (possible from two search locations being with 10km of one another)
+unnested_df.drop_duplicates(inplace=True)
+# reset the index
+unnested_df.reset_index(inplace=True, drop=True)
+# display the df
+unnested_df
+
+
+new_place_id_list = pub_df['place_id'].tolist()
 """
 
+
+st.code(code_block_11)
+exec(code_block_11)
+
+st.markdown("""
+I then passed this list into the details API, only returning place_id and reviews. These will be used to further filter.
+            """)
+
+api_details_call = """
+# Get the details again but this time only for bars, because this is a subset of the original
+# data we only need to return place_id and reviews and we can perform an inner join later 
+
+places_endpoint = "https://maps.googleapis.com/maps/api/place/details/json"
+
+results_list_filtered = []
+
+for i in range(1,len(new_place_id_list)):
+
+    places_params = {
+        "key" : MY_API_KEY,
+        "place_id" : f"{new_place_id_list[i]}",
+        "fields" : "place_id,reviews"
+    }
+    place_params_encoded = urlencode(places_params)
+    details_url = f"{places_endpoint}?{place_params_encoded}"
+
+    r4 = requests.get(details_url)
+    result = r4.json()['result']
+    results_list_filtered.append(result)  # Append the 'result' to the 'results_list'
+
+"""
+
+st.code(api_details_call)
+
+code_block_12 = """
+with open('data/data/irish_pubs/details_data_filtered.json', 'r') as f:
+    results_list_filtered = json.load(f)
+
+# reassign
+d = results_list_filtered
+# stackoverflow answer - enumerate tracks the index, so check the index of the current iteration is not present
+# elsewhere in the list
+new_list = [i for n, i in enumerate(d) if i not in d[n + 1:]]
+
+
+filtering_output = f"{len(results_list_filtered)} versus {len(new_list)}"
+st.write(filtering_output)
+"""
+
+st.code(code_block_12)
+exec(code_block_12)
+
+code_block_13 = """
+irish_review_list = []
+no_reviews = []
+# if the review contains the word ireland, add the place_id to a new list
+no_review_count = 0  # Move the initialization outside the loop
+for i in range(1, len(new_list)):
+    pub_id = new_list[i]['place_id']
+    try:
+        reviews = new_list[i]['reviews']
+        for j in range(len(reviews)):
+            review_text = reviews[j]['text'].lower().split(" ")
+            if ('ireland' in review_text) or 'irish' in review_text:
+                if pub_id not in irish_review_list:
+                    irish_review_list.append(pub_id)
+    except:
+        no_review_count += 1
+        no_reviews.append(new_list[i]['place_id'])
+
+        
+len(irish_review_list)  
+
+review_filtering = f'''
+There are {len(irish_review_list)}/{len(new_list)} reviews that explicitly reference ireland/irish and
+      {len(no_reviews)}/{len(new_list)} places without any reviews. Instead of filtering these out it may be better to just add this as a column to the df.
+      '''
+
+st.write(review_filtering)
+      """
+
+st.code(code_block_13)
+exec(code_block_13)
+
+code_block_14 = """
+irish_review = pd.DataFrame(irish_review_list, columns = ['place_id'])#,'irish_mentioned'])
+new_df = unnested_df
+
+# similar to case statement, check if the elements of place_id are in irish review and return a Y for yes...
+new_df['in_irish_review'] = np.where(new_df['place_id'].isin(irish_review['place_id']), 'Y', 'N')
+
+# drop any rows where there are no reviews
+new_df.dropna(subset=['rating'], inplace=True)
+
+st.dataframe(new_df.sample(50))
+"""
+
+st.code(code_block_14)
+exec(code_block_14)
+
+st.header("Analysis",divider = True)
+
+st.markdown("""
+Now we have the data in a format we can work with, I wanted to ask some questions
+            """)
+
+code_block_15 = """
+# Create a new DataFrame with the latitude and longitude columns
+coords = new_df[['location.lat', 'location.lng']]
+
+# Function to calculate the distance between two latitude and longitude coordinates using the Haversine formula
+def haversine(lat1, lon1, lat2, lon2):
+    R = 6371  # Radius of the Earth in kilometers
+    dlat = math.radians(lat2 - lat1)
+    dlon = math.radians(lon2 - lon1)
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    distance = R * c
+    return distance
+
+# Initialize variables to store the minimum distance and indices of the closest pubs
+min_distance = float('inf')
+closest_pub_1_index = -1
+closest_pub_2_index = -1
+
+# Iterate through each pair of pubs and calculate the distance
+for i in range(len(coords)):
+    for j in range(i+1, len(coords)):
+        lat1, lon1 = coords.iloc[i]
+        lat2, lon2 = coords.iloc[j]
+        
+        # Exclude instances where pubs have the same latitude and longitude
+        if lat1 != lat2 or lon1 != lon2:
+            distance = haversine(lat1, lon1, lat2, lon2)
+            
+            # Update the minimum distance and indices if a closer pair is found
+            if distance < min_distance:
+                min_distance = distance
+                closest_pub_1_index = i
+                closest_pub_2_index = j
+
+# Get the details of the two closest pubs
+closest_pub_1 = new_df.iloc[closest_pub_1_index]
+closest_pub_2 = new_df.iloc[closest_pub_2_index]
+
+closest_pub_1.to_pickle("closest_pub_1.pkl")
+closest_pub_2.to_pickle("closest_pub_2.pkl")
+"""
+
+st.code(code_block_15)
+
+code_block_16 = """
+closest_pub_1 = pd.read_pickle('data/data/irish_pubs/closest_pub_1.pkl')
+closest_pub_2 = pd.read_pickle('data/data/irish_pubs/closest_pub_2.pkl')
+"""
+
+st.code(code_block_16)
+exec(code_block_16)
+
+with 
