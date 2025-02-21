@@ -5,6 +5,11 @@ import math
 import requests
 import json
 from urllib.parse import urlencode
+import streamlit.components.v1 as components
+import string
+from collections import Counter
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 
 st.title("Irish Pubs of Europe")
 
@@ -368,57 +373,77 @@ st.markdown("""
 Now we have the data in a format we can work with, I wanted to ask some questions
             """)
 
+st.subheader("Where Are the Two Closest Irish Pubs?")
+
 code_block_15 = """
-# Create a new DataFrame with the latitude and longitude columns
-coords = new_df[['location.lat', 'location.lng']]
+lat = np.radians(new_df['location.lat'].values)
+lon = np.radians(new_df['location.lng'].values)
 
-# Function to calculate the distance between two latitude and longitude coordinates using the Haversine formula
-def haversine(lat1, lon1, lat2, lon2):
-    R = 6371  # Radius of the Earth in kilometers
-    dlat = math.radians(lat2 - lat1)
-    dlon = math.radians(lon2 - lon1)
-    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    distance = R * c
-    return distance
+# Number of pubs
+n = len(lat)
 
-# Initialize variables to store the minimum distance and indices of the closest pubs
-min_distance = float('inf')
-closest_pub_1_index = -1
-closest_pub_2_index = -1
+# Compute the pairwise differences using broadcasting
+lat_diff = lat.reshape(n, 1) - lat.reshape(1, n)
+lon_diff = lon.reshape(n, 1) - lon.reshape(1, n)
 
-# Iterate through each pair of pubs and calculate the distance
-for i in range(len(coords)):
-    for j in range(i+1, len(coords)):
-        lat1, lon1 = coords.iloc[i]
-        lat2, lon2 = coords.iloc[j]
-        
-        # Exclude instances where pubs have the same latitude and longitude
-        if lat1 != lat2 or lon1 != lon2:
-            distance = haversine(lat1, lon1, lat2, lon2)
-            
-            # Update the minimum distance and indices if a closer pair is found
-            if distance < min_distance:
-                min_distance = distance
-                closest_pub_1_index = i
-                closest_pub_2_index = j
+# Haversine formula components computed vectorized
+R = 6371  # Earth's radius in kilometers
+a = np.sin(lat_diff / 2)**2 + np.cos(lat.reshape(n, 1)) * np.cos(lat.reshape(1, n)) * np.sin(lon_diff / 2)**2
+c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
+dist_matrix = R * c
 
-# Get the details of the two closest pubs
+# Exclude self-comparisons by setting the diagonal to infinity
+np.fill_diagonal(dist_matrix, np.inf)
+
+# Find indices of the minimum distance
+closest_pub_1_index, closest_pub_2_index = np.unravel_index(np.argmin(dist_matrix), dist_matrix.shape)
+
+# Retrieve the two closest pubs
 closest_pub_1 = new_df.iloc[closest_pub_1_index]
-closest_pub_2 = new_df.iloc[closest_pub_2_index]
-
-closest_pub_1.to_pickle("closest_pub_1.pkl")
-closest_pub_2.to_pickle("closest_pub_2.pkl")
+closest_pub_2= new_df.iloc[closest_pub_2_index]
+min_distance_m = dist_matrix[closest_pub_1_index, closest_pub_2_index]
 """
 
 st.code(code_block_15)
+exec(code_block_15)
 
-code_block_16 = """
-closest_pub_1 = pd.read_pickle('data/data/irish_pubs/closest_pub_1.pkl')
-closest_pub_2 = pd.read_pickle('data/data/irish_pubs/closest_pub_2.pkl')
+col1, col2 = st.columns([1,1])  # Adjust ratios as needed
+
+with col1:
+    st.dataframe(closest_pub_1)
+
+with col2:
+    st.dataframe(closest_pub_2)
+
+st.markdown(f"""
+According to the lat, long coordinates provided by Google, these two Irish Pubs are {min_distance_m:.1f}m apart. Usually this would set the alarms ringing, however,
+when dropping into the street on Google Maps, it can be seen that they are neighbours (and quite possibly owned by the same person).
+
+Even if they do have the same decor and address, from the reviews they have different interiors and different
+reviews which is good enough for me.
+
+The two closest Irish Pubs in Europe are in Bilbao, Spain.
+""")
+
+# Create an iframe with the Street View embed
+iframe_html = f"""
+<iframe src = "https://www.google.com/maps/embed?pb=!4v1740159719757!6m8!1m7!1szsZKxU4mHn9ajkumPfxyQQ!2m2!1d43.27109869547795!2d-2.945285583336426!3f325.4624322457213!4f-9.643372395872404!5f0.7820865974627469" width = "680" height = "450" style = "border:0;" allowfullscreen = "" loading = "lazy" referrerpolicy = "no-referrer-when-downgrade" > </iframe >
+
 """
 
-st.code(code_block_16)
-exec(code_block_16)
+# Embed the iframe in the Streamlit app
+components.html(iframe_html, width=800, height=600)
 
-with 
+st.subheader("What Are Common Pubs Names?")
+
+st.markdown("""
+Noticed that pubs tend to be named with a stereotypically Irish surname such as Murphy's or Sullivan's
+""")
+
+code_block_16 = """
+new_df['clean_names'] = new_df['name'].str.lower().str.replace('[{}]'.format(string.punctuation), '')
+all_names = ' '.join(new_df['clean_names'])
+words = all_names.split()
+word_counts = Counter(words)
+most_common_words = word_counts.most_common()
+"""
