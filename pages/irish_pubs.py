@@ -9,7 +9,11 @@ import streamlit.components.v1 as components
 import string
 from collections import Counter
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+from wordcloud import WordCloud, ImageColorGenerator
+import os
+from PIL import Image
+from scipy.ndimage import gaussian_gradient_magnitude
+
 
 st.title("Irish Pubs of Europe")
 
@@ -446,4 +450,50 @@ all_names = ' '.join(new_df['clean_names'])
 words = all_names.split()
 word_counts = Counter(words)
 most_common_words = word_counts.most_common()
+
+word_count_dict = {key: value for key, value in most_common_words}
+
+cloud = WordCloud()
+
+cloud.generate_from_frequencies(word_count_dict)
+
+fig = plt.figure(figsize=(8, 8))
+plt.imshow(cloud, interpolation='bilinear')
+plt.axis('off')
+plt.show()
+
+st.pyplot(fig)
 """
+
+st.code(code_block_16)
+exec(code_block_16)
+
+code_block_17 = """
+guinness_colour = np.array(Image.open("data/data/irish_pubs/guin.jpg"))
+
+# create mask  white is "masked out"
+guinness_mask = guinness_colour.copy()
+guinness_mask[guinness_mask.sum(axis=2) == 0] = 255
+
+# some finesse: we enforce boundaries between colors so they get less washed out.
+# For that we do some edge detection in the image
+edges = np.mean([gaussian_gradient_magnitude(guinness_colour[:, :, i] / 255., 2) for i in range(3)], axis=0)
+guinness_mask[edges > .3] = 255
+
+wc = WordCloud(max_words=500, mask=guinness_mask, max_font_size=40, random_state=42, relative_scaling=0)
+
+# generate word cloud
+wc.generate_from_frequencies(word_count_dict)
+
+# create coloring from image
+image_colors = ImageColorGenerator(guinness_colour)
+wc.recolor(color_func=image_colors)
+guinness_fig = plt.figure(figsize=(50, 50))
+plt.imshow(wc)
+
+st.pyplot(guinness_fig)
+"""
+
+st.code(code_block_17)
+
+st.image("data/data/irish_pubs/guinness_new.png")
