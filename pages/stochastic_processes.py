@@ -849,7 +849,7 @@ lower and upper bounds are taken into consideration.
 st.header("Interactive PDF for European Roulette Colour Betting")
 
 # Slider for the number of spins (t)
-t = st.slider("Number of Spins (t)", min_value=100, max_value=10000, value=1000, step=100)
+t = st.slider("Number of Spins (t)", min_value=100, max_value=10000, value=3700, step=100)
 
 # Calculate distribution parameters based on t
 sigma = 6 * np.sqrt(38) / 37       # per-bet sigma
