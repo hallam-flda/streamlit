@@ -10,7 +10,13 @@ from scipy.stats import norm
 import plotly.graph_objects as go
 import pickle
 
+
+from pages.partials.eu_sim_intro import introduction
+
+
 st.title("European Roulette Simulations")
+
+introduction()
 
 st.header("Introduction", divider = True)
 st.write("""
@@ -216,191 +222,13 @@ First it makes sense to plot the results of a simulation with the base assumptio
 """
 )
 
+file_path = "pages/european_sim_funcs.py"
+
+with open(file_path, "r") as f:
+    code_text = f.read()
+
 with st.expander("See Code"):
-    st.code(
-        """
-        from dataclasses import dataclass
-import numpy as np
-import pickle
-
-np.random.seed(17)
-
-
-@dataclass
-class SimulationResult:
-    spins: int
-    balance: int
-    balance_history: list
-    casino_profit: list
-    stop_reason: str
-
-
-# Constants for different games
-GAME_PARAMS = {
-    'colours': {
-        'win_prob': 0.48649,
-        'win_payout': 1,
-        'centre': -1 / 37,
-        'sigma': 6 * np.sqrt(38) / 37,
-        'loss_streak': 17
-    },
-    'numbers': {
-        'win_prob': 1 / 37,
-        'win_payout': 35,
-        'centre': -1 / 37,
-        'sigma': 5.84,
-        'loss_streak': 290
-    }
-}
-
-
-def unlucky_balance_condition(balance_history, game='colours'):
-    '''Check if the player's balance is significantly below expectations.'''
-    if len(balance_history) < 100:
-        return False
-    params = GAME_PARAMS[game]
-    t = len(balance_history)
-    center = params['centre'] * t
-    std_dev = params['sigma'] * np.sqrt(t)
-    lower_threshold = 100 + (center - 1.645 * std_dev)
-    return balance_history[-1] < lower_threshold
-
-
-def european_roulette_simulation(max_spins: int, starting_balance: int, game='colours') -> SimulationResult:
-    spins = 0
-    balance = starting_balance
-    balance_history = [balance]
-    casino_profit = [0]
-    consecutive_losses = 0
-    stop_reason = None
-
-    params = GAME_PARAMS[game]
-
-    while True:
-        if balance <= 0:
-            stop_reason = 'zero_balance'
-            break
-        if spins >= max_spins:
-            stop_reason = 'max_spins'
-            break
-        # if consecutive_losses >= params['loss_streak']:
-        #     stop_reason = 'loss_streak'
-        #     break
-        # if unlucky_balance_condition(balance_history, game):
-        #     stop_reason = 'unlucky_dist'
-        #     break
-
-        # Simulate a spin outcome
-        outcome = params['win_payout'] if np.random.rand() < params['win_prob'] else -1
-        balance += outcome
-        spins += 1
-        balance_history.append(balance)
-        casino_profit.append(starting_balance - balance)
-        consecutive_losses = consecutive_losses + 1 if outcome == -1 else 0
-
-    return SimulationResult(spins, balance, balance_history, casino_profit, stop_reason)
-
-
-def run_simulations(n=10000, max_spins=20000, starting_balance=100, game='colours'):
-    results = []
-    for i in range(n):
-        result = european_roulette_simulation(max_spins, starting_balance, game)
-        results.append(result)
-        if (i + 1) % 100 == 0 or i == n - 1:
-            print(f"Completed {i + 1}/{n} simulations for game: {game}")
-    return results
-
-
-def compute_rolling_margin(casino_profit_lists):
-    '''
-    Compute a "rolling margin" ratio.
-
-    Given a list of casino_profit lists (each list corresponding to one simulation),
-    this function creates a padded 2D array (using np.nan for missing values), then:
-      - For column 0, uses the sum of valid entries.
-      - For each subsequent column, adds the sum of differences (current - previous)
-        for rows that have valid values.
-      - Finally, the ratio is cumulative difference divided by the cumulative count
-        of non-NaN values.
-    '''
-    # Determine maximum length
-    max_len = max(len(lst) for lst in casino_profit_lists)
-    matrix = np.full((len(casino_profit_lists), max_len), np.nan)
-    for i, lst in enumerate(casino_profit_lists):
-        matrix[i, :len(lst)] = lst
-
-    non_nan_counts = np.sum(~np.isnan(matrix), axis=0)
-    cumulative_counts = np.cumsum(non_nan_counts)
-
-    cumulative_diff = np.empty(max_len)
-    cumulative_diff[0] = np.nansum(matrix[:, 0])
-    for j in range(1, max_len):
-        valid = ~np.isnan(matrix[:, j]) & ~np.isnan(matrix[:, j - 1])
-        diff_sum = np.sum(matrix[valid, j] - matrix[valid, j - 1])
-        cumulative_diff[j] = cumulative_diff[j - 1] + diff_sum
-
-    final_ratio = cumulative_diff / cumulative_counts
-    return final_ratio
-
-
-def aggregate_results(results):
-    '''
-    Given a list of SimulationResult objects, extract:
-      - overall rolling margin (from casino_profit, excluding the first value),
-      - a list of spins,
-      - closing balances,
-      - total spins,
-      - and grouping by stop_reason for individual rolling margins.
-    Returns a dictionary of aggregated stats.
-    '''
-    # Extract overall lists from all simulations
-    casino_profit_lists = [r.casino_profit[1:] for r in results]  # exclude initial value
-    overall_rolling_margin = compute_rolling_margin(casino_profit_lists)
-    spin_list = [r.spins for r in results]
-    closing_balances = [r.balance_history[-1] for r in results]
-    total_spins = sum(spin_list)
-    stop_reasons = [r.stop_reason for r in results]
-
-    # Group simulations by stop_reason
-    grouped = {}
-    for r in results:
-        grouped.setdefault(r.stop_reason, []).append(r)
-
-    grouped_rolling_margin = {}
-    for stop_reason, group in grouped.items():
-        cp_lists = [r.casino_profit[1:] for r in group]
-        if cp_lists:
-            grouped_rolling_margin[stop_reason] = compute_rolling_margin(cp_lists)
-        else:
-            grouped_rolling_margin[stop_reason] = None
-
-    return {
-        "overall": {
-            "rolling_margin": overall_rolling_margin,
-            "spin_list": spin_list,
-            "closing_balances": closing_balances,
-            "total_spins": total_spins,
-            "stop_reasons": stop_reasons
-        },
-        "by_stop_reason": grouped_rolling_margin
-    }
-
-
-if __name__ == '__main__':
-    # Run simulations for both games
-    simulation_output = {}
-    for game in GAME_PARAMS.keys():
-        print(f"\nRunning simulations for game: {game}")
-        sim_results = run_simulations(n=10000, max_spins=20000, starting_balance=100, game=game)
-        simulation_output[game] = aggregate_results(sim_results)
-
-    # Save the aggregated simulation output into a pickle file.
-    with open('simulation_results.pickle', 'wb') as f:
-        pickle.dump(simulation_output, f)
-
-    print("\nSimulation results have been saved to 'simulation_results.pickle'.")
-    
-        """)
+    st.code(code_text, language="python")
 
 loading_pickle = """
 with open('data/data/projects/roulette_sims/simulation_results_no_conditions.pickle', 'rb') as f:
@@ -501,7 +329,7 @@ st.dataframe(df_stop_reason)
 
 
 ###
-### ------------------- WITH CONSTRAINTS ---------------
+### ------------------- WITH CONDITIONS ---------------
 ###
 
 st.header("With Luck Conditions", divider = True)
@@ -528,18 +356,23 @@ tab1, tab2, tab3 = st.tabs(["Short term", "Medium term", "Long term"])
 # --- Short term tab ---
 with tab1:
     st.subheader("Short Term (0–100 spins)")
-    st.write("Too much noise early on without any chance for customers to lapse (at least 100 spins required)")
+    st.write("Once again there is not much to infer from the first 100 spins.")
     fig, ax = plt.subplots()
     ax.plot(colours_rolling_margin_cond)
     ax.axhline(y=0.027027, linestyle='--', color='red')
     ax.set_xlim(0, 100)
-    ax.set_ylim(0.02, 0.05)
+    ax.set_ylim(0.02, 0.04)
     st.pyplot(fig)
 
 # --- Medium term tab ---
 with tab2:
     st.subheader("Medium Term (100–4000 spins)")
-    st.write("In the medium term we observe marginally above average profit margins for the casino")
+    st.write(
+            """
+             In the medium term we observe a marginally lower than average RTP. This is the opposite of what we found in the first test case.
+              This would indicate that losing customers who are leaving the same do not collectively go on to lose at the same rate
+              """
+              )
     fig, ax = plt.subplots()
     ax.plot(colours_rolling_margin_cond)
     ax.axhline(y=0.027027, linestyle='--', color='red')
@@ -550,19 +383,19 @@ with tab2:
 # --- Long term tab ---
 with tab3:
     st.subheader("Long Term (4000–20000 spins)")
-    st.write("In the long term the excess profit persists but is diluted by players on long streaks")
+    st.write("The additional conditions do not appear to be having a large affect in the long run.")
     fig, ax = plt.subplots()
     ax.plot(colours_rolling_margin_cond)
     ax.axhline(y=0.027027, linestyle='--', color='red')
     ax.set_xlim(4000, 20000)
-    ax.set_ylim(0.026, 0.028)
+    ax.set_ylim(0.0265, 0.0275)
     st.pyplot(fig)
 
 st.subheader("Spin Distribution")
 st.write(
 """
-The distribution of spins is skewed due to the budget constraint we introduced, however, we can see that the 
-average number of spins matches the theory of gambler's ruin with a £100 starting balance.
+There is now a much heavier skew as we lose approximately 5% of the sample after 100 spins (those with a balance under the normal distribution treshold). This reduces the average number
+of spins in the sample so even if the margin % is similar to the simulation without luck conditions, the casino is set to make less revenue due to reduced staking.
 """
 )
 fig, ax = plt.subplots()
@@ -596,6 +429,168 @@ df_stop_reason = df_stop_reason.value_counts()
 st.dataframe(df_stop_reason)
 
 
+###
+### ------------------- WITH STRONGER CONDITIONS ---------------
+###
+
+st.header("With Stronger Luck Conditions (Extreme Example)", divider = True)
+
+st.write(
+f"""
+While the average number of spins to bankruptcy is 3,703, the distribution is heavily skewed to the right, this will become more apparent when looking at games with high variance.
+One way to revise the successive losses appropriate is to take the kernel density estimate. That is the value of x that maximises our PDF of spins.
+"""
+)
+
+import seaborn as sns
+
+data = pd.Series(results["colours"]["overall"]["spin_list"])
+
+# Create a figure and axes
+fig, ax = plt.subplots()
+
+# Plot the KDE onto these axes
+sns.kdeplot(data, bw_method='scott', ax=ax)
+
+# Now retrieve the lines
+lines = ax.get_lines()
+if lines:
+    # There's at least one line: the KDE curve
+    x_values, y_values = lines[0].get_data()
+    # Find the index of the maximum y
+    mode_index = np.argmax(y_values)
+    approx_mode = x_values[mode_index]
+else:
+    approx_mode = None
+
+annotation_mode = f"Approx Mode: {approx_mode:.0f} spins"
+
+ax.text(
+    10000,        # x in data coordinates
+    0.00025,          # y in data coordinates (pick a suitable y that is inside your plot area)
+    annotation_mode, 
+    color='black',
+    fontsize=8
+)
+
+st.pyplot(fig)
+
+successive_loss_code_strong = """
+
+avg_colour_game_strong = {
+    "Probability": [estimate_run_probability_adjusted(2199, streak, loss_prob) for streak in range(1,20)]    
+}
+
+df_strong = pd.DataFrame(avg_colour_game_strong, index = range(1,20))
+df_strong.index.name = "Streak Length"
+
+fig, ax = plt.subplots()
+plt.bar(df_strong.index, df_strong.Probability)
+plt.title("Probability of Losing Streak in 2,199 Spins")
+st.pyplot(fig)
+
+"""
+with st.expander("See Code"):
+    st.code(successive_loss_code_strong)
+
+exec(successive_loss_code_strong)
+
+
+loading_pickle_cond_strong = """
+with open('data/data/projects/roulette_sims/simulation_results_stronger_conditions.pickle', 'rb') as f:
+    results_cond_strong = pickle.load(f)
+
+st.write(results_cond_strong)
+"""
+
+with st.expander("See Pickle Loading and Data"):
+    st.code(loading_pickle_cond_strong)
+    exec(loading_pickle_cond_strong)
+
+colours_rolling_margin_cond = results_cond_strong["colours"]["overall"]["rolling_margin"]
+
+st.subheader("Margin Performance")
+
+
+# Create three tabs
+tab1, tab2, tab3 = st.tabs(["Short term", "Medium term", "Long term"])
+
+# --- Short term tab ---
+with tab1:
+    st.subheader("Short Term (0–100 spins)")
+    st.write("Once again there is not much to infer from the first 100 spins.")
+    fig, ax = plt.subplots()
+    ax.plot(colours_rolling_margin_cond)
+    ax.axhline(y=0.027027, linestyle='--', color='red')
+    ax.set_xlim(0, 100)
+    ax.set_ylim(0.02, 0.04)
+    st.pyplot(fig)
+
+# --- Medium term tab ---
+with tab2:
+    st.subheader("Medium Term (100–4000 spins)")
+    st.write(
+            """
+             In the medium term we observe a marginally lower than average RTP. This is the opposite of what we found in the first test case.
+              This would indicate that losing customers who are leaving the same do not collectively go on to lose at the same rate
+              """
+              )
+    fig, ax = plt.subplots()
+    ax.plot(colours_rolling_margin_cond)
+    ax.axhline(y=0.027027, linestyle='--', color='red')
+    ax.set_xlim(100, 4000)
+    ax.set_ylim(0.025, 0.03)
+    st.pyplot(fig)
+
+# --- Long term tab ---
+with tab3:
+    st.subheader("Long Term (4000–20000 spins)")
+    st.write("The additional conditions do not appear to be having a large affect in the long run.")
+    fig, ax = plt.subplots()
+    ax.plot(colours_rolling_margin_cond)
+    ax.axhline(y=0.027027, linestyle='--', color='red')
+    ax.set_xlim(4000, 20000)
+    ax.set_ylim(0.0265, 0.0275)
+    st.pyplot(fig)
+
+st.subheader("Spin Distribution")
+st.write(
+"""
+There is now a much heavier skew as we lose approximately 5% of the sample after 100 spins (those with a balance under the normal distribution treshold). This reduces the average number
+of spins in the sample so even if the margin % is similar to the simulation without luck conditions, the casino is set to make less revenue due to reduced staking.
+"""
+)
+fig, ax = plt.subplots()
+plt.hist(results_cond_strong["colours"]["overall"]["spin_list"], bins = 50)
+ax.axvline(x=3703, linestyle = '--', color = 'green')
+
+annotation = f'''
+Theoretical average spins to bankruptcy from £100 = 3,703 \n
+Mean spins to bankruptcy in sample = {np.mean(results_cond_strong["colours"]["overall"]["spin_list"]):.2f}
+'''
+
+ax.text(
+    5000,        # x in data coordinates
+    800,          # y in data coordinates (pick a suitable y that is inside your plot area)
+    annotation, 
+    color='black',
+    fontsize=8
+)
+
+st.pyplot(fig)
+
+st.subheader("Stopping Reason")
+st.write(
+"""
+Finally we can look at the reason for customers stopping. Now only 500 customers actually get through the whole of their balance.
+"""
+)
+
+df_stop_reason_strong = pd.DataFrame(results_cond_strong["colours"]["overall"]["stop_reasons"])
+df_stop_reason_strong = df_stop_reason_strong.value_counts()
+st.dataframe(df_stop_reason_strong)
+
+
 # # Compute probabilities using the mathematical approximation for the new loss probability
 # streaks = range(5, 21)
 # flip_counts = range(500, 10500, 500)
@@ -610,7 +605,6 @@ st.dataframe(df_stop_reason)
 
 # st.dataframe(df_adjusted)
 
-with tab_numbers:
 
 ###
 ### -------------- NUMBERS -------------
