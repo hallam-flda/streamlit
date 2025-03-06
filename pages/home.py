@@ -52,13 +52,13 @@ f = {
     },
     "events": [
             {
-            "media": {
-                "url": "https://content.mindshareapps.com/media/sites/90/2022/04/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20220421153153-1024x552.png",
-                "caption": "London Jul 2016 - Sep 2016"
-            },
             "start_date": {
                 "year":2016,
                 "month":7,
+            },
+            "start_date": {
+                "year":2016,
+                "month":9,
             },
             "text": {
                 "headline": "Econometrics Intern",
@@ -70,15 +70,16 @@ f = {
                         """
             }
         },
+
             {
-            "media": {
-                "url": "https://igamingbusiness.com/wp-content/uploads/2020/08/skybet_38.jpg",
-                "caption": "Photo insert"
-            },
             "start_date": {
                 "year":2017,
                 "month":9
             },
+            "end_date": {
+                "year": 2018,
+                "month": 12
+                },
             "text": {
                 "headline": "Operations Graduate",
                 "text": """
@@ -86,14 +87,126 @@ f = {
                         <li>Graduate program with rotations in Customer Experience, Safer Gambling and Trading Departments.</li>
                         <li>Gained invaluable insight across multiple business areas and making personal connections with stakeholders.</li>
                         <li>Customer facing roles helped to keep focus on improving experience for the customer in future roles.</li>
-                        <li>Learnt SQL (Oracle/Impala) from scratch within role during a period of database migration requiring syntax translation from existing codes.</li>
+                        </ul>
+
+                        """
+            },
+            "group": "Sky Betting and Gaming/Flutter Entertainment"
+        },
+            {
+            "start_date": {
+                "year":2017,
+                "month":10
+            },
+            "end_date": {
+                "year": 2022,
+                "month": 2
+                },
+            "text": {
+                "headline": "Co-Founder",
+                "text": """
+                        <ul>
+                        <li>Handpicked and sold 2000+ items of vintage clothing over four years, balancing evening/weekend work alongside a full-time job.</li>
+                        <li>Organised multiple stock-buying trips to Ukraine and built strong local business relationships.</li>
+                        <li>Acquired skills in website development, stock management, customer engagement, and accounting.</li>
                         </ul>
 
                         """
             }
+        },
+            {
+            "start_date": {
+                "year":2018,
+                "month":12
+            },
+            "end_date": {
+                "year": 2020,
+                "month": 10
+                },
+            "text": {
+                "headline": "Business Intelligence Analyst",
+                "text": """
+                        <ul>
+                        <li>Compiled ad-hoc analysis to tight deadlines for the Trading Department.</li>
+                        <li>Developed SQL to an advanced level with large, complex data sources, often requiring significant cleansing prior to analysis.</li>
+                        <li>Used data visualization tools (R <em>(ggplot2)</em>, SAP Business Objects, Power BI) to create automated KPI reporting for hundreds of stakeholders daily, including intra-day reporting for high-profile events.</li>
+                        </ul>
+
+                        """
+            },
+            "group":  "Sky Betting and Gaming/Flutter Entertainment"
+        },
+            {
+            "start_date": {
+                "year":2020,
+                "month":10
+            },
+            "end_date": {
+                "year": 2022,
+                "month": 12
+                },
+            "text": {
+                "headline": "Senior Business Intelligence Analyst",
+                "text": """
+                        <ul>
+                        <li>Completed International Leadership and Management (ILM-3) course and supervised three Junior BI Analysts.</li>
+                        <li>Led a proof of concept migrating from SAP Business Objects to Looker, presenting tailored demos to leadership and cross-functional teams.</li>
+                        <li>Collaborated with internal and external stakeholders to transition from Impala to Google Cloud Platform, translating existing queries to BigQuery.</li>
+                        <li>Served as a trusted point of contact for the BI team, working with data engineers to resolve data-related incidents.</li>
+                        </ul>
+
+
+                        """
+            },
+            "group":  "Sky Betting and Gaming/Flutter Entertainment"
+        },
+            {
+            "start_date": {
+                "year":2022,
+                "month":12
+            },
+            "end_date": {
+                "year": 2024,
+                "month": 3
+                },
+            "text": {
+                "headline": "Career Break",
+                "text": """
+                        My Career Break was primarily travel-focussed, however, it afforded me the chance to work on some personal development goals.
+                        <ul>
+                        <li>Spanish: Achieved level B1 through intensive group lessons.</li>
+                        <li>Python: Completed Udemy’s 100 days of Python course, developing fundamental skills.</li>
+                        <li>Python: Automated data cleansing and web-scraping for a part-time job.</li>
+                        </ul>
+
+                        """
+            }
+        },
+            {
+            "start_date": {
+                "year":2024,
+                "month":3
+            },
+            "end_date": {
+                "year": 2024,
+                "month": 11
+                },
+            "text": {
+                "headline": "Senior Analyst (FTC)",
+                "text": """
+                        <ul>
+                        <li>Fixed Term Contract to support GCP-to-AWS migration, focusing on the business-critical metric of Normalised Margin.</li>
+                        <li>Calculated Normalised Margin efficiency improvements exceeding £15m.</li>
+                        <li>Collaborated with international teams in Romania and Ireland to explain legacy metrics and methodologies of the SkyBet heritage brand.</li>
+                        <li>Introduced best practices such as documentation, change logs, and version control.</li>
+                        </ul>
+                        """
+            },
+            "group":  "Sky Betting and Gaming/Flutter Entertainment"
         }
-    ]}
+    ]
+    }    
 
 
 # render timeline
-timeline(f, height=800)
+timeline(f, height=700)
