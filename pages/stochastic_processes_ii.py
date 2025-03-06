@@ -272,7 +272,14 @@ $$
 $$
 """,unsafe_allow_html=True)
 
+st.header("What's Next?", divider = True)
 
+st.write(
+        """
+         It looks as though it is possible to calculate the variance of a stochastic process with absorbing boundaries, however, it may be quicker and easier to run simulations rather
+         than understand the complex underlying theory.
+        """
+)
 # st.title("Simulation Approach")
 
 

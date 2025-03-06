@@ -211,14 +211,14 @@ df = pd.DataFrame(results_list)
 st.dataframe(df)
 """
 
-st.code(code_block_8)
+st.code(code_block_9)
 exec(code_block_9)
 
 st.markdown("""
 Quite a lot of the results appear not to be Irish Pubs. The presence of McDonald's is particularly concerning.
 What I think is happening is Google will always return results even if it doesn't have any quality matches.
 
-In order to improve the accuracy, we can look for places that contian the words 'Irish' or 'Ireland'. While this may
+In order to improve the accuracy, we can look for places that contain the words 'Irish' or 'Ireland'. While this may
 not be a foolproof method, it should remove erronous results like McDonald's.
 
 The first step to doing this is joining the two datasets. We can do this through the location information.
@@ -426,8 +426,11 @@ when dropping into the street on Google Maps, it can be seen that they are neigh
 Even if they do have the same decor and address, from the reviews they have different interiors and different
 reviews which is good enough for me.
 
-The two closest Irish Pubs in Europe are in Bilbao, Spain.
-""")
+<b>Therefore, the two closest Irish Pubs in Europe are in Bilbao, Spain.<b>
+""", unsafe_allow_html=True)
+
+
+
 
 # Create an iframe with the Street View embed
 iframe_html = f"""
@@ -435,13 +438,59 @@ iframe_html = f"""
 
 """
 
+
 # Embed the iframe in the Streamlit app
 components.html(iframe_html, width=800, height=600)
 
-st.subheader("What Are Common Pubs Names?")
+
+st.subheader("Where is the Most Isolated Irish Pub?")
+
+code_block_15b = """
+# For each pub, find the distance to the closest other pub
+closest_distances = dist_matrix.min(axis=1)
+
+# Identify which pub has the largest 'closest distance'
+furthest_pub_index = np.argmax(closest_distances)
+furthest_pub = new_df.iloc[furthest_pub_index]
+furthest_pub_distance_km = closest_distances[furthest_pub_index]
+
+st.write(furthest_pub)
+"""
+
+st.code(code_block_15b)
+
+col1a, col2a = st.columns([1,1])
+iframe_html_2 = f"""
+<iframe
+    src="https://www.google.com/maps?q=62.009078,-6.775936&z=2&output=embed"
+    width="400"
+    height="300"
+    style="border:0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+"""
+with col1a:
+    exec(code_block_15b)
+with col2a:
+    components.html(iframe_html_2, width=400, height=300)
+
+st.markdown(f"""
+            'Glitnir' in the Faroe Islands is {furthest_pub_distance_km:.2f}km away from
+            it's nearest fellow Irish Pub which is located in Western Norway
+            """)
+
+
+st.subheader("What Are Common Pub Names?")
 
 st.markdown("""
-Noticed that pubs tend to be named with a stereotypically Irish surname such as Murphy's or Sullivan's
+After coming across a few, we noticed that pubs tend to be named with a stereotypically Irish surname such as Murphy's or Sullivan's. One way to visualise common words and phrases
+is to use a word cloud, where the size of the word is proportional to its frequency in the data.
+            
+Are they gimmicky? Yes. Are they used anywhere other than restaurants renovated in the early 2000s? No.
+            
+Regardless, I came across a rather interesting tutorial on Medium that I wanted to try.
 """)
 
 code_block_16 = """
@@ -452,9 +501,7 @@ word_counts = Counter(words)
 most_common_words = word_counts.most_common()
 
 word_count_dict = {key: value for key, value in most_common_words}
-
 cloud = WordCloud()
-
 cloud.generate_from_frequencies(word_count_dict)
 
 fig = plt.figure(figsize=(8, 8))
@@ -467,6 +514,14 @@ st.pyplot(fig)
 
 st.code(code_block_16)
 exec(code_block_16)
+
+st.markdown("""
+The default plot really isn't anything to write home about and the only real inference that can be
+drawn from it is commonly used words are: The Irish Pub/Bar.
+
+While I still don't believe there is any logical reason to use a wordcloud, I still wanted to see if I 
+could produce something worthy of sticking on the back of a toilet cubicle door.
+""")
 
 code_block_17 = """
 guinness_colour = np.array(Image.open("data/data/irish_pubs/guin.jpg"))
@@ -497,3 +552,4 @@ st.pyplot(guinness_fig)
 st.code(code_block_17)
 
 st.image("data/data/irish_pubs/guinness_new.png")
+

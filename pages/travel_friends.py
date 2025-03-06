@@ -2,12 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
 import seaborn as sns
 import numpy as np
-
-#st.set_page_config(page_title="Travel Friends", page_icon="👫")
-
 
 df = pd.read_csv("data/data/people_names_redacted.csv")
 
@@ -737,7 +733,8 @@ One of the passengers I picked up in a remote part of Chilean Patagonia, I later
                     
 #### Girlfriend
 
-I met my girlfriend the first time I went to Buenos Aires in March 2023. I then returned to BA on two more occasions and through her was able to meet far more 'real' Argentinians than I would have been able to otherwise. 
+I met my girlfriend the first time I went to Buenos Aires in March 2023. I then returned to BA on two more occasions and through her was able to meet far more 'real' Argentinians than I would have been able to otherwise. Out of respect for her
+privacy I'll resist the temptation to attach an accompanying large embarrassing photo.
 
 
             

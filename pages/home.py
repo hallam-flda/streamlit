@@ -29,9 +29,9 @@ with col2:
 st.header("Professional Summary", divider = True)
 
 st.write("""
-Senior Business Intelligence Analyst with 6 years of experience in the digital gambling industry. Over 2 years of people management duties for 3 junior analysts. 
-             Passionate about learning new skills and teaching existing skills to team members. 
-             Proven track-record of project management for the wider BI department with a focus on platform migration."
+Senior Business Intelligence Analyst with 6 years of experience in the digital gambling industry. Over 2 years of people management duties for 3 Junior Analysts. 
+Passionate about learning new skills and teaching existing skills to team members. 
+Proven track-record of project management for the wider BI department with a focus on platform migration.
              
 """)
 
