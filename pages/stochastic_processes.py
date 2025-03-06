@@ -5,6 +5,7 @@ import random
 import numpy as np
 from scipy.stats import norm
 import plotly.graph_objects as go
+import inspect
 
 plt.rcParams['text.usetex'] = False
 
@@ -36,6 +37,7 @@ def large_sim():
     plt.hlines(y=0, xmin=0,  xmax=len(large_sim_x),
                color='black', linestyle='--')
     plt.box(False)
+    plt.title("5 Random Walk Simulations with t=1000 steps")
     plt.show()
     return fig
 
@@ -286,8 +288,46 @@ ax.hlines(y=0, xmin=0, xmax=len(list_1), colors='black', linestyles='--')
 ax.set_yticks(np.arange(int(min(list_2)), int(max(list_2)) + 1, 1))
 ax.set_aspect('equal', 'box')
 
-# Display the plot in Streamlit
+plt.title(f"Random Walk for t={random_walk_ss} steps")
+
 st.pyplot(fig)
+
+with st.expander("See Code"):
+    st.code(
+        """
+        list_1, list_2 = random_walk(random_walk_ss)
+        plt.plot(list_1, list_2)
+        fig, ax = plt.subplots()
+
+        # Plot the points
+        ax.plot(list_1, list_2)  # 'o-' adds points on each step
+
+        # Annotate arrows for direction
+        for i in range(1, len(list_1)):
+            dx = list_1[i] - list_1[i-1]
+            dy = list_2[i] - list_2[i-1]
+            color = 'green' if dy > 0 else 'red'
+            ax.annotate('', xy=(list_1[i], list_2[i]), xytext=(list_1[i-1], list_2[i-1]),
+                        arrowprops=dict(arrowstyle='->', color=color, lw=1))
+
+        ax.spines['bottom'].set_visible(False)  # Hide bottom spine
+        ax.spines['left'].set_visible(False)   # Hide left spine
+        ax.spines['top'].set_visible(False)    # Hide top spine
+        ax.spines['right'].set_visible(False)  # Hide right spine
+
+        # Keep ticks but hide axes lines
+        ax.xaxis.set_ticks_position('bottom')  # Show ticks at the bottom
+        ax.yaxis.set_ticks_position('left')    # Show ticks at the left
+
+        ax.hlines(y=0, xmin=0, xmax=len(list_1), colors='black', linestyles='--')
+        ax.set_yticks(np.arange(int(min(list_2)), int(max(list_2)) + 1, 1))
+        ax.set_aspect('equal', 'box')
+
+        plt.title(f"Random Walk for t={random_walk_ss} steps")
+
+        st.pyplot(fig)
+        """
+        )
 
 
 st.markdown("""
@@ -295,9 +335,13 @@ For a small values of t (steps) it is not easy to see that we expect the random 
 However, if we increase the number of steps to 1000 we can see more clearly the behaviour of the random walk.
             """)
 
+
 n1000_sim_plot = large_sim()
 
 st.pyplot(n1000_sim_plot)
+
+with st.expander("See Code"):
+    st.code(inspect.getsource(large_sim))
 
 st.markdown(r"""
 Here we are still only observing 5 simulations. We know that the expected value of t at any point is zero but what can we expect is a reasonable amount of noise?
@@ -354,8 +398,11 @@ annotated_sim = random_walk_annotated()
 
 st.pyplot(annotated_sim)
 
+with st.expander("See Code"):
+    st.code(inspect.getsource(random_walk_annotated))
+
 st.markdown(r"""
-As before, the assertion that we expected the walk to converge to zero and cross the st deviation lines an infinite amount of times will only become apparent when we plot multiple
+As before, the assertion that we expected the walk to converge to zero and cross the standard deviation lines an infinite amount of times will only become apparent when we plot multiple
 simulations over a sufficiently large time frame.""")
 
 graph_sims = st.slider("Select number of Simulations",
@@ -417,6 +464,9 @@ def large_n_annotated(random_walk_function, num_simulations=25, n_trials=1000, s
 large_sim_plot = large_n_annotated(random_walk, graph_sims, graph_trials)
 
 st.pyplot(large_sim_plot)
+
+with st.expander("See Code"):
+    st.code(inspect.getsource(large_n_annotated))
 
 st.header("Random Walk with Drift", divider=True)
 
@@ -585,7 +635,7 @@ st.header("Python Visualisation", divider = True)
 
 st.markdown(r"""
             Below we can see that for the same number of trials and simulations as the simple random walk (controlled by the same slider as earlier) we
-             have a downward trend in the expected value of $Y_t$ and a process that now has a st.dev of $y = E[Y_{t}] - \sigma \sqrt{t}$
+             have a downward trend in the expected value of $Y_t$ and a process that now has a standard deviation of $y = E[Y_{t}] - \sigma \sqrt{t}$
              """)
 
 # Define the random walk function
@@ -597,6 +647,9 @@ def random_walk_with_drift_colours(n_trials):
         running_balance += 1 if outcome <= 17 else -1
         balance.append(running_balance)
     return list(range(len(balance))), balance
+
+with st.expander("Random Walk with Drift Function"):
+    st.code(inspect.getsource(random_walk_with_drift_colours))
 
 # Number of simulations
 def large_t_with_drift(num_simulations=25, n_trials=1000, pdf_view = False):
@@ -613,6 +666,8 @@ def large_t_with_drift(num_simulations=25, n_trials=1000, pdf_view = False):
     all_drift_array = np.array(all_drift)
     mean_drift = np.mean(all_drift_array, axis=0)
     sample_stdev_drift = np.std(all_drift_array, axis=0, ddof=1)
+    
+    # optional to plot these, the graph is a bit hard to read with
     sample_stdev_drift_ub = sample_stdev_drift + mean_drift
     sample_stdev_drift_lb = mean_drift - sample_stdev_drift
 
@@ -637,7 +692,6 @@ def large_t_with_drift(num_simulations=25, n_trials=1000, pdf_view = False):
     ax.plot(t_values_drift, max_y_drift, color='black')
     ax.plot(t_values_drift, min_y_drift, color='black')
 
-    # Instead of using len(x_drift)-1, use the same limits you'll enforce:
     desired_ymin = -0.06 * n_trials
     desired_ymax = 0.04 * n_trials
     ax.fill_between(x_drift, max_y_drift, desired_ymax,
@@ -653,7 +707,6 @@ def large_t_with_drift(num_simulations=25, n_trials=1000, pdf_view = False):
     ax.text(n_trials * 0.9, expected_with_drift[-1] - sigma * np.sqrt(t_values_drift[-1]) - expected_with_drift[-1]*-0.2, 
             r'$y = E[Y_{t}] - \sigma \sqrt{t}$', fontsize=10)
 
-    # Enhance the plot appearance
     ax.spines['bottom'].set_position(('data', 0))  # x-axis in the middle
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -672,6 +725,9 @@ def large_t_with_drift(num_simulations=25, n_trials=1000, pdf_view = False):
 large_n_with_drift_plot = large_t_with_drift(graph_sims, graph_trials)
 
 st.pyplot(large_n_with_drift_plot)
+
+with st.expander("See Code"):
+    st.code(inspect.getsource(large_t_with_drift))
 
 st.markdown(r""" More generally, we can describe the distribution of possible values of $Y_t$ at any point t with the distribution
             
@@ -750,6 +806,9 @@ pdf_plot = pdf_view()
 
 st.pyplot(pdf_plot)
 
+with st.expander("See Code"):
+    st.code(inspect.getsource(pdf_view))
+
 st.header("Example Usage")
 
 st.markdown(r"""Given what we know about the distribution for the standard colour choice of european roulette what is the probability that after 1000 spins
@@ -803,6 +862,9 @@ def colour_roulette_pdf(t):
 pdf_fig = colour_roulette_pdf(1000)
 st.pyplot(pdf_fig)
 
+with st.expander("See Code"):
+    st.code(inspect.getsource(colour_roulette_pdf))
+
 st.markdown(r"""
 
 To calculate the cumulative probability of values more extreme than the limits set, we can use the probability between the two lines and subtract it from 1.            
@@ -827,16 +889,11 @@ $$
 Therefore the probability of having lost more than £75 or won more than £25 after 1,000 spins at £1 per spin is 11.46%
 """, unsafe_allow_html=True)
 
-# Slider for the number of spins
-import streamlit as st
-import numpy as np
-import plotly.graph_objects as go
-from scipy.stats import norm
 
-st.title("Why is this interesting?")
+st.title("Why Is This Interesting?")
 
 st.markdown(r"""
-The theory behind a markov process producing a normal distributed is prefaced on a large number of spins $t$
+The theory behind a markov process producing a normal distribution is prefaced on a large number of spins $t$
 and no restrictions on how much a player can win or lose. This is unrealistic in practice. 
 
  
@@ -849,109 +906,117 @@ lower and upper bounds are taken into consideration.
 st.header("Interactive PDF for European Roulette Colour Betting")
 
 # Slider for the number of spins (t)
-t = st.slider("Number of Spins (t)", min_value=100, max_value=10000, value=3700, step=100)
+t_slider = st.slider("Number of Spins (t)", min_value=100, max_value=10000, value=3700, step=100)
 
-# Calculate distribution parameters based on t
-sigma = 6 * np.sqrt(38) / 37       # per-bet sigma
-center = -1/37 * t                 # drift (mean)
-std_dev = sigma * np.sqrt(t)       # standard deviation
+def interactive_pdf(t):
+    # Calculate distribution parameters based on t
+    sigma = 6 * np.sqrt(38) / 37       # per-bet sigma
+    center = -1/37 * t                 # drift (mean)
+    std_dev = sigma * np.sqrt(t)       # standard deviation
 
-# Define the x-axis range as ±3 standard deviations around the center
-x_min = center - 3 * std_dev
-x_max = center + 3 * std_dev
+    # Define the x-axis range as ±3 standard deviations around the center
+    x_min = center - 3 * std_dev
+    x_max = center + 3 * std_dev
 
-# Set default values for the bound sliders (e.g., 0.5 std_dev from the center)
-default_lower = center - 0.5 * std_dev
-default_upper = center + 0.5 * std_dev
+    # Set default values for the bound sliders (e.g., 0.5 std_dev from the center)
+    default_lower = center - 0.5 * std_dev
+    default_upper = center + 0.5 * std_dev
 
-# Create sliders for the lower and upper bounds with dynamic ranges
-lower_bound = st.slider(
-    "Lower Threshold", 
-    min_value=float(x_min), 
-    max_value=float(center), 
-    value=float(default_lower), 
-    step=1.0,
-    key="lower_bound"
-)
-upper_bound = st.slider(
-    "Upper Threshold", 
-    min_value=float(center), 
-    max_value=float(x_max), 
-    value=float(default_upper), 
-    step=1.0,
-    key="upper_bound"
-)
+    # Create sliders for the lower and upper bounds with dynamic ranges
+    lower_bound = st.slider(
+        "Lower Threshold", 
+        min_value=float(x_min), 
+        max_value=float(center), 
+        value=float(default_lower), 
+        step=1.0,
+        key="lower_bound"
+    )
+    upper_bound = st.slider(
+        "Upper Threshold", 
+        min_value=float(center), 
+        max_value=float(x_max), 
+        value=float(default_upper), 
+        step=1.0,
+        key="upper_bound"
+    )
 
-# Compute the PDF using scipy.stats.norm
-x_values = np.linspace(x_min, x_max, 1000)
-y_values = norm.pdf(x_values, loc=center, scale=std_dev)
+    # Compute the PDF using scipy.stats.norm
+    x_values = np.linspace(x_min, x_max, 1000)
+    y_values = norm.pdf(x_values, loc=center, scale=std_dev)
 
-# Calculate the tail probabilities (i.e. probability of being more extreme than the bounds)
-p_lower = norm.cdf(lower_bound, loc=center, scale=std_dev)
-p_upper = 1 - norm.cdf(upper_bound, loc=center, scale=std_dev)
-extreme_prob = p_lower + p_upper
+    # Calculate the tail probabilities (i.e. probability of being more extreme than the bounds)
+    p_lower = norm.cdf(lower_bound, loc=center, scale=std_dev)
+    p_upper = 1 - norm.cdf(upper_bound, loc=center, scale=std_dev)
+    extreme_prob = p_lower + p_upper
 
-formatted_lower = f"-£{abs(lower_bound):,.2f}" if lower_bound < 0 else f"£{abs(lower_bound):,.2f}"
-formatted_upper = f"-£{abs(upper_bound):,.2f}" if upper_bound < 0 else f"£{abs(upper_bound):,.2f}"
+    formatted_lower = f"-£{abs(lower_bound):,.2f}" if lower_bound < 0 else f"£{abs(lower_bound):,.2f}"
+    formatted_upper = f"-£{abs(upper_bound):,.2f}" if upper_bound < 0 else f"£{abs(upper_bound):,.2f}"
 
-st.write(
-    f"**Probability of balance being either less than {formatted_lower} or greater than {formatted_upper}: {extreme_prob:.2%}**"
-)
+    st.write(
+        f"**Probability of balance being either less than {formatted_lower} or greater than {formatted_upper}: {extreme_prob:.2%}**"
+    )
 
-# Create the Plotly figure
-fig = go.Figure()
+    # Create the Plotly figure
+    fig = go.Figure()
 
-# Add the PDF curve
-fig.add_trace(go.Scatter(
-    x=x_values, 
-    y=y_values,
-    mode='lines',
-    name='Normal PDF',
-    line=dict(color='blue')
-))
+    # Add the PDF curve
+    fig.add_trace(go.Scatter(
+        x=x_values, 
+        y=y_values,
+        mode='lines',
+        name='Normal PDF',
+        line=dict(color='blue')
+    ))
 
-# Add vertical dashed lines for the lower and upper bounds
-fig.add_shape(
-    type="line", x0=lower_bound, x1=lower_bound, y0=0, y1=max(y_values),
-    line=dict(color="red", dash="dash")
-)
-fig.add_shape(
-    type="line", x0=upper_bound, x1=upper_bound, y0=0, y1=max(y_values),
-    line=dict(color="red", dash="dash")
-)
+    # Add vertical dashed lines for the lower and upper bounds
+    fig.add_shape(
+        type="line", x0=lower_bound, x1=lower_bound, y0=0, y1=max(y_values),
+        line=dict(color="red", dash="dash")
+    )
+    fig.add_shape(
+        type="line", x0=upper_bound, x1=upper_bound, y0=0, y1=max(y_values),
+        line=dict(color="red", dash="dash")
+    )
 
-# Shade the left tail (x < lower_bound)
-mask_left = x_values < lower_bound
-fig.add_trace(go.Scatter(
-    x=x_values[mask_left],
-    y=y_values[mask_left],
-    mode='lines',
-    fill='tozeroy',
-    fillcolor='rgba(173,216,230,0.5)',  # light blue fill
-    line=dict(color='lightblue'),
-    showlegend=False
-))
+    # Shade the left tail (x < lower_bound)
+    mask_left = x_values < lower_bound
+    fig.add_trace(go.Scatter(
+        x=x_values[mask_left],
+        y=y_values[mask_left],
+        mode='lines',
+        fill='tozeroy',
+        fillcolor='rgba(173,216,230,0.5)',  # light blue fill
+        line=dict(color='lightblue'),
+        showlegend=False
+    ))
 
-# Shade the right tail (x > upper_bound)
-mask_right = x_values > upper_bound
-fig.add_trace(go.Scatter(
-    x=x_values[mask_right],
-    y=y_values[mask_right],
-    mode='lines',
-    fill='tozeroy',
-    fillcolor='rgba(173,216,230,0.5)',  # light blue fill
-    line=dict(color='lightblue'),
-    showlegend=False
-))
+    # Shade the right tail (x > upper_bound)
+    mask_right = x_values > upper_bound
+    fig.add_trace(go.Scatter(
+        x=x_values[mask_right],
+        y=y_values[mask_right],
+        mode='lines',
+        fill='tozeroy',
+        fillcolor='rgba(173,216,230,0.5)',  # light blue fill
+        line=dict(color='lightblue'),
+        showlegend=False
+    ))
 
-# Update layout of the plot
-fig.update_layout(
-    title=f"PDF for European Roulette Colour Betting (t = {t})",
-    xaxis_title="Balance",
-    yaxis_title="Probability Density",
-    xaxis=dict(showgrid=True),
-    yaxis=dict(showgrid=True),
-    showlegend=False
-)
+    # Update layout of the plot
+    fig.update_layout(
+        title=f"PDF for European Roulette Colour Betting (t = {t})",
+        xaxis_title="Balance",
+        yaxis_title="Probability Density",
+        xaxis=dict(showgrid=True),
+        yaxis=dict(showgrid=True),
+        showlegend=False
+    )
 
-st.plotly_chart(fig, use_container_width=True)
+    return fig
+
+interactive_pdf_plot = interactive_pdf(t=t_slider)
+
+st.plotly_chart(interactive_pdf_plot, use_container_width=True)
+
+with st.expander("See Code"):
+    st.code(inspect.getsource(interactive_pdf))
