@@ -46,6 +46,18 @@ st.title("""
 **Stochastic Processes Theory**
 """)
 
+with st.expander("Packages Used In This Article"):
+    st.code(
+        """
+        import streamlit as st
+        import matplotlib.pyplot as plt
+        import random
+        import numpy as np
+        from scipy.stats import norm
+        import plotly.graph_objects as go
+        import inspect  
+        """)
+
 st.header("""
 Introduction
 """)
