@@ -11,7 +11,7 @@ with col1:
     st.header("Hi, I'm Hallam 👋")
     st.markdown(f"""
              
-            In {current_year.year} it no longer suffices to have a standard CV, rather than claiming I have technical skills,
+            In {current_year.year} it no longer suffices to have a standard CV, especially in tech. Rather than claiming I have technical skills,
             I intend to use this app as a space to demonstrate them. It also serves as a space to work on personal projects that interest me and develop
             new skills.
 
@@ -26,7 +26,7 @@ with col2:
 
 
 
-st.header("Professional Summary")
+st.header("Professional Summary", divider = True)
 
 st.write("""
 Senior Business Intelligence Analyst with 6 years of experience in the digital gambling industry. Over 2 years of people management duties for 3 junior analysts. 
@@ -207,6 +207,7 @@ f = {
     ]
     }    
 
+st.header("Employment History", divider = True)
 
 # render timeline
 timeline(f, height=700)
