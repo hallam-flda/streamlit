@@ -14,7 +14,8 @@ pages = {
     ],
     "Ad-Hoc Analysis":[
         st.Page("pages/travel_friends.py", title = "Travel Friends"),
-        st.Page("pages/irish_pubs.py", title = "Irish Pubs of Europe")
+        st.Page("pages/irish_pubs.py", title = "Irish Pubs of Europe"),
+        st.Page("pages/argentina_home_advantage.py", title = "Argentinian League Home Advantage")
     ],
     "Return To Player Inefficiency": [
         st.Page("pages/stochastic_processes.py", title="Stochastic Processes - Introduction"),
