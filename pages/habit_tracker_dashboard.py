@@ -19,8 +19,6 @@ df['portuguese_xp_change'] = df.portuguese - df.portuguese_lagged
 df['date'] = pd.to_datetime(df['date']).dt.date
 
 
-fig = px.bar(df, x="date", y=["spanish_xp_change","portuguese_xp_change"], title="Daily XP Change by Language")
+fig = px.bar(df, x="date", y=["spanish_xp_change","portuguese_xp_change"], title="Daily Duolingo XP Change by Language")
 
-st.title("Hello This is a new page")
-st.header("Just checking this isn't the reason a new window opens every time")
 st.plotly_chart(fig)

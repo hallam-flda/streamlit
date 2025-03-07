@@ -490,7 +490,7 @@ is to use a word cloud, where the size of the word is proportional to its freque
             
 Are they gimmicky? Yes. Are they used anywhere other than restaurants renovated in the early 2000s? No.
             
-Regardless, I came across a rather interesting tutorial on Medium that I wanted to try.
+Regardless, I came across a rather interesting tutorial on [Medium](https://medium.com/analytics-vidhya/wordcloud-based-on-image-27afacb7cf44) that I wanted to try. First the standard out-the-box wordlcloud  from the WordCloud module:
 """)
 
 code_block_16 = """
