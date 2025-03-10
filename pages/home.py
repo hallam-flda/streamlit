@@ -10,9 +10,7 @@ col1, col2 = st.columns([1,1])  # Adjust ratios as needed
 with col1:
     st.header("Hi, I'm Hallam 👋")
     st.markdown(f"""
-             
-            In {current_year.year} it no longer suffices to have a standard CV, especially in tech. Rather than claiming I have technical skills,
-            I intend to use this app as a space to demonstrate them. It also serves as a space to work on personal projects that interest me and develop
+            Welcome to my personal website! The intention behind this site is a place to share some examples of my analysis as well as a space to work on personal projects that interest me and develop
             new skills.
 
             This app has been created using [Streamlit](https://docs.streamlit.io) - a Python framework used for making web applications.
@@ -47,7 +45,7 @@ f = {
         },
         "text": {
             "headline": "Employment History",
-            "text": "Timeline </p>"
+            "text": "Hallam Cunningham </p>"
         }
     },
     "events": [
@@ -63,9 +61,10 @@ f = {
             "text": {
                 "headline": "Econometrics Intern",
                 "text": """
+                        <b>MINDSHARE - LONDON</b>
                         <ul>
                         <li> Gained advanced Excel experience (Vlookups, Sumifs, Pivot Tables) to cleanse and prepare data for analysis. 
-                        <li> Performed multivariate regression analysis in R to identify the key drivers of sales from media expenditure.
+                        <li> Performed Marketing Mix Modelling in R to identify the key drivers of sales from media expenditure.
                         </ul>
                         """
             }
@@ -83,6 +82,7 @@ f = {
             "text": {
                 "headline": "Operations Graduate",
                 "text": """
+                        <b> SKY BETTING AND GAMING - LEEDS </b>
                         <ul>
                         <li>Graduate program with rotations in Customer Experience, Safer Gambling and Trading Departments.</li>
                         <li>Gained invaluable insight across multiple business areas and making personal connections with stakeholders.</li>
@@ -105,6 +105,7 @@ f = {
             "text": {
                 "headline": "Co-Founder",
                 "text": """
+                        <b> BUDMO CLOTHING LTD </b>
                         <ul>
                         <li>Handpicked and sold 2000+ items of vintage clothing over four years, balancing evening/weekend work alongside a full-time job.</li>
                         <li>Organised multiple stock-buying trips to Ukraine and built strong local business relationships.</li>
@@ -126,6 +127,7 @@ f = {
             "text": {
                 "headline": "Business Intelligence Analyst",
                 "text": """
+                        <b> SKY BETTING AND GAMING - LEEDS </b>
                         <ul>
                         <li>Compiled ad-hoc analysis to tight deadlines for the Trading Department.</li>
                         <li>Developed SQL to an advanced level with large, complex data sources, often requiring significant cleansing prior to analysis.</li>
@@ -148,6 +150,7 @@ f = {
             "text": {
                 "headline": "Senior Business Intelligence Analyst",
                 "text": """
+                        <b> SKY BETTING AND GAMING - LEEDS </b>
                         <ul>
                         <li>Completed International Leadership and Management (ILM-3) course and supervised three Junior BI Analysts.</li>
                         <li>Led a proof of concept migrating from SAP Business Objects to Looker, presenting tailored demos to leadership and cross-functional teams.</li>
@@ -172,7 +175,7 @@ f = {
             "text": {
                 "headline": "Career Break",
                 "text": """
-                        My Career Break was primarily travel-focussed, however, it afforded me the chance to work on some personal development goals.
+                        My Career Break was primarily travel-focused, however, it afforded me the chance to work on some personal development goals.
                         <ul>
                         <li>Spanish: Achieved level B1 through intensive group lessons.</li>
                         <li>Python: Completed Udemy’s 100 days of Python course, developing fundamental skills.</li>
@@ -194,6 +197,7 @@ f = {
             "text": {
                 "headline": "Senior Analyst (FTC)",
                 "text": """
+                        <b> FLUTTER ENTERTAINMENT - LEEDS </b>
                         <ul>
                         <li>Fixed Term Contract to support GCP-to-AWS migration, focusing on the business-critical metric of Normalised Margin.</li>
                         <li>Calculated Normalised Margin efficiency improvements exceeding £15m.</li>
