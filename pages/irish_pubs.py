@@ -13,6 +13,10 @@ from wordcloud import WordCloud, ImageColorGenerator
 import os
 from PIL import Image
 from scipy.ndimage import gaussian_gradient_magnitude
+from streamlit_folium import st_folium
+import folium
+
+
 
 
 st.title("Irish Pubs of Europe")
@@ -481,6 +485,16 @@ st.markdown(f"""
             it's nearest fellow Irish Pub which is located in Western Norway
             """)
 
+
+st.subheader("Where Are All The Irish Pubs?")
+
+coordinates = new_df.location.lat, new_df_location.lon
+
+m = folium.Map(location=coordinates[0], zoom_start=5)
+for lat, lon in coordinates:
+    folium.Marker([lat, lon]).add_to(m)
+
+st_folium(m, width=700, height=500)
 
 st.subheader("What Are Common Pub Names?")
 
