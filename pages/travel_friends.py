@@ -740,6 +740,18 @@ privacy I'll resist the temptation to attach an accompanying large embarrassing 
             
 """, unsafe_allow_html=True)
 
+st.header("Final Thoughts")
+
+st.markdown(
+"""
+Overall, I'm glad I kept this record, although it was a bit laborious having to enter all the data once I returned. Most of the people on the list, if I think hard enough, I can still recall which leads me to believe I probably would've forgotten a lot more of my
+travels had I not done this. 
+
+Part of the allure of travel for me is meeting people who can bring a new perspective to how you view things. It's clear from this that while I met people from 30 different countries, some regions are severely under-represented in the international travelling community.
+If I want to meet more people from Asia and Africa, I will likely have to travel there.
+"""
+)
+
 
 st.subheader("Appendix - Full Dataset")
 with st.expander("Source Data"):
