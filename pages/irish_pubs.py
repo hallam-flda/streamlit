@@ -15,6 +15,7 @@ from PIL import Image
 from scipy.ndimage import gaussian_gradient_magnitude
 from streamlit_folium import st_folium
 import folium
+from folium.plugins import FastMarkerCluster
 
 
 
@@ -94,7 +95,7 @@ Below we can see some summary statistics for the remaining countries.
 
 code_block_3 = """
 select_countries = ['Russia','Turkey','Iran','United Kingdom','Algeria',
-                    'Azerbaijan','Syria','Iraq','Isle Of Man','Ireland','Tunisia','Turkmenistan',
+                    'Azerbaijan','Syria','Iraq','Isle Of Man','Ireland','Tunisia','Turkmenistan','Isle Of Man',
                    'Morocco','Kazakhstan','Uzbekistan','Vatican City']
 
 select_cities = filtered_data[~filtered_data.country.isin(select_countries)]
@@ -486,15 +487,26 @@ st.markdown(f"""
             """)
 
 
-st.subheader("Where Are All The Irish Pubs?")
+st.subheader("Is It Possible to Display Them All on One Map?")
 
-coordinates = new_df.location.lat, new_df_location.lon
+with st.expander("Yes, but it's quite laggy"):
+    with st.echo():
+        coordinates = list(zip(new_df["location.lat"], new_df["location.lng"], new_df["name"], new_df["rating"]))
 
-m = folium.Map(location=coordinates[0], zoom_start=5)
-for lat, lon in coordinates:
-    folium.Marker([lat, lon]).add_to(m)
+        center_lat = new_df["location.lat"].mean()
+        center_lon = new_df["location.lng"].mean()
 
-st_folium(m, width=700, height=500)
+        m = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles="CartoDB Positron")
+
+        marker_cluster = FastMarkerCluster(
+            [[lat, lon, f"<b>{name}</b><br>Rating: {rating}" ] for lat, lon, name, rating in coordinates]
+        ).add_to(m)
+
+        m.fit_bounds([[new_df["location.lat"].min(), new_df["location.lng"].min()], 
+                    [new_df["location.lat"].max(), new_df["location.lng"].max()]])
+
+        st_folium(m, width=900, height=600)
+
 
 st.subheader("What Are Common Pub Names?")
 
