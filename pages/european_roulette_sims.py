@@ -9,6 +9,8 @@ import streamlit as st
 from scipy.stats import norm
 import plotly.graph_objects as go
 import pickle
+import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 
 
 from pages.partials.eu_sim_intro import introduction
@@ -510,7 +512,7 @@ with st.expander("See Pickle Loading and Data"):
     st.code(loading_pickle_cond_strong)
     exec(loading_pickle_cond_strong)
 
-colours_rolling_margin_cond = results_cond_strong["colours"]["overall"]["rolling_margin"]
+colours_rolling_margin_cond_strong = results_cond_strong["colours"]["overall"]["rolling_margin"]
 
 st.subheader("Margin Performance")
 
@@ -523,7 +525,7 @@ with tab1:
     st.subheader("Short Term (0–100 spins)")
     st.write("Once again there is not much to infer from the first 100 spins.")
     fig, ax = plt.subplots()
-    ax.plot(colours_rolling_margin_cond)
+    ax.plot(colours_rolling_margin_cond_strong)
     ax.axhline(y=0.027027, linestyle='--', color='red')
     ax.set_xlim(0, 100)
     ax.set_ylim(0.02, 0.04)
@@ -539,7 +541,7 @@ with tab2:
               """
               )
     fig, ax = plt.subplots()
-    ax.plot(colours_rolling_margin_cond)
+    ax.plot(colours_rolling_margin_cond_strong)
     ax.axhline(y=0.027027, linestyle='--', color='red')
     ax.set_xlim(100, 4000)
     ax.set_ylim(0.025, 0.03)
@@ -550,7 +552,7 @@ with tab3:
     st.subheader("Long Term (4000–20000 spins)")
     st.write("The additional conditions do not appear to be having a large affect in the long run.")
     fig, ax = plt.subplots()
-    ax.plot(colours_rolling_margin_cond)
+    ax.plot(colours_rolling_margin_cond_strong)
     ax.axhline(y=0.027027, linestyle='--', color='red')
     ax.set_xlim(4000, 20000)
     ax.set_ylim(0.0265, 0.0275)
@@ -593,7 +595,57 @@ df_stop_reason_strong = pd.DataFrame(results_cond_strong["colours"]["overall"]["
 df_stop_reason_strong = df_stop_reason_strong.value_counts()
 st.dataframe(df_stop_reason_strong)
 
+st.header("Impact on Casino Revenue",divider=True)
 
+st.markdown(
+"""
+The results for impact on quoted RTP figures are underwhelming to say the least. The constraints I introduced do not materially impact the quoted margin %. However, in the final example
+the majority of customers cease to play for reasons other than zero balance. Furthermore, the average number of spins to lapsing is almost 1,500 less than the 3,703 given by the stopping time theory.
+Ultimately this will still hurt the casino's bottom line.
+"""
+)
+
+profit_values = {
+    "profit_base": 0,
+    "profit_cond": 0,
+    "profit_cond_strong": 0
+}
+
+
+datasets = {
+    "profit_base": results,
+    "profit_cond": results_cond,
+    "profit_cond_strong": results_cond_strong
+}
+
+for key, dataset in datasets.items():
+    for i in dataset["colours"]["overall"]["closing_balances"]:
+        profit_values[key] += 100-i
+
+margin_pc_list = [colours_rolling_margin[-1],colours_rolling_margin_cond[-1],colours_rolling_margin_cond_strong[-1]]
+
+fig, ax = plt.subplots()
+ax.bar(["No Conditions", "Weak Conditions", "Strong Conditions"], margin_pc_list)
+ax.set_ylim(0.0268, 0.0272) 
+st.pyplot(fig)
+
+st.markdown(
+"""
+Not much difference to be seen, however, when we plot total revenue instead...
+"""
+)
+
+total_rev = [profit_values["profit_base"],profit_values["profit_cond"],profit_values["profit_cond_strong"]]
+
+fig, ax = plt.subplots()
+ax.bar(["No Conditions", "Weak Conditions", "Strong Conditions"], total_rev)
+ax.yaxis.set_major_formatter(mtick.FuncFormatter(lambda x, _: f'£{x:,.0f}'))
+st.pyplot(fig)
+
+
+
+
+#st.write(results_cond_strong["colours"])
 
 # # Compute probabilities using the mathematical approximation for the new loss probability
 # streaks = range(5, 21)
