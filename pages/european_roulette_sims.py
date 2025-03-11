@@ -335,7 +335,7 @@ st.dataframe(df_stop_reason)
 st.header("With Luck Conditions", divider = True)
 
 loading_pickle_cond = """
-with open('data/data/projects/roulette_sims/simulation_results.pickle', 'rb') as f:
+with open('data/data/projects/roulette_sims/simulation_results_standard_conditions.pickle', 'rb') as f:
     results_cond = pickle.load(f)
 
 st.write(results_cond)
