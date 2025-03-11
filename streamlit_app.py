@@ -18,6 +18,7 @@ pages = {
         st.Page("pages/argentina_home_advantage.py", title = "Argentinian League Home Advantage")
     ],
     "Return To Player Inefficiency": [
+        st.Page("pages/rtp_intro.py", title="Introduction"),
         st.Page("pages/stochastic_processes.py", title="Stochastic Processes - Introduction"),
         st.Page("pages/stochastic_processes_ii.py", title="Stochastic Processes - Stopping Times"),
         st.Page("pages/european_roulette_sims.py", title="European Roulette Simulations I", icon="⏳"),
