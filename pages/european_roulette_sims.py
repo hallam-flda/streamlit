@@ -433,7 +433,7 @@ st.dataframe(df_stop_reason)
 ### ------------------- WITH STRONGER CONDITIONS ---------------
 ###
 
-st.header("With Stronger Luck Conditions (Extreme Example)", divider = True)
+st.header("With Stricter Luck Conditions", divider = True)
 
 st.write(
 f"""
@@ -495,9 +495,12 @@ with st.expander("See Code"):
 
 exec(successive_loss_code_strong)
 
+st.subheader("New Conditions")
+
+st.markdown("Now we impose the stricter conditions of stopping play when a player hits either a losing streak of 13 or is in the bottom 10% of the normal distribution (as given by <1.28 standard deviations of the expected value)")
 
 loading_pickle_cond_strong = """
-with open('data/data/projects/roulette_sims/simulation_results_stronger_conditions.pickle', 'rb') as f:
+with open('data/data/projects/roulette_sims/simulation_results_strict_conditions.pickle', 'rb') as f:
     results_cond_strong = pickle.load(f)
 
 st.write(results_cond_strong)
@@ -582,13 +585,14 @@ st.pyplot(fig)
 st.subheader("Stopping Reason")
 st.write(
 """
-Finally we can look at the reason for customers stopping. Now only 500 customers actually get through the whole of their balance.
+Finally we can look at the reason for customers stopping. Now only 552 customers actually get through the whole of their balance.
 """
 )
 
 df_stop_reason_strong = pd.DataFrame(results_cond_strong["colours"]["overall"]["stop_reasons"])
 df_stop_reason_strong = df_stop_reason_strong.value_counts()
 st.dataframe(df_stop_reason_strong)
+
 
 
 # # Compute probabilities using the mathematical approximation for the new loss probability
@@ -610,88 +614,88 @@ st.dataframe(df_stop_reason_strong)
 ### -------------- NUMBERS -------------
 ###
 
-numbers_rolling_margin = results["numbers"]["overall"]["rolling_margin"]
+# numbers_rolling_margin = results["numbers"]["overall"]["rolling_margin"]
 
-st.subheader("Margin Performance")
+# st.subheader("Margin Performance")
 
 
-# Create three tabs
-tab1, tab2, tab3 = st.tabs(["Short term", "Medium term", "Long term"])
+# # Create three tabs
+# tab1, tab2, tab3 = st.tabs(["Short term", "Medium term", "Long term"])
 
-# --- Short term tab ---
-with tab1:
-    st.subheader("Short Term (0–100 spins)")
-    st.write("Too much noise early on without any chance for customers to lapse (at least 100 spins required)")
-    fig, ax = plt.subplots()
-    ax.plot(numbers_rolling_margin)
-    ax.axhline(y=0.027027, linestyle='--', color='red')
-    ax.set_xlim(0, 100)
-    ax.set_ylim(0, 0.05)
-    st.pyplot(fig)
+# # --- Short term tab ---
+# with tab1:
+#     st.subheader("Short Term (0–100 spins)")
+#     st.write("Too much noise early on without any chance for customers to lapse (at least 100 spins required)")
+#     fig, ax = plt.subplots()
+#     ax.plot(numbers_rolling_margin)
+#     ax.axhline(y=0.027027, linestyle='--', color='red')
+#     ax.set_xlim(0, 100)
+#     ax.set_ylim(0, 0.05)
+#     st.pyplot(fig)
 
-# --- Medium term tab ---
-with tab2:
-    st.subheader("Medium Term (100–4000 spins)")
-    st.write("In the medium term we observe marginally above average profit margins for the casino")
-    fig, ax = plt.subplots()
-    ax.plot(numbers_rolling_margin)
-    ax.axhline(y=0.027027, linestyle='--', color='red')
-    ax.set_xlim(100, 4000)
-    ax.set_ylim(0.02, 0.035)
-    st.pyplot(fig)
+# # --- Medium term tab ---
+# with tab2:
+#     st.subheader("Medium Term (100–4000 spins)")
+#     st.write("In the medium term we observe marginally above average profit margins for the casino")
+#     fig, ax = plt.subplots()
+#     ax.plot(numbers_rolling_margin)
+#     ax.axhline(y=0.027027, linestyle='--', color='red')
+#     ax.set_xlim(100, 4000)
+#     ax.set_ylim(0.02, 0.035)
+#     st.pyplot(fig)
 
-# --- Long term tab ---
-with tab3:
-    st.subheader("Long Term (4000–20000 spins)")
-    st.write("In the long term the excess profit persists but is diluted by players on long streaks")
-    fig, ax = plt.subplots()
-    ax.plot(numbers_rolling_margin)
-    ax.axhline(y=0.027027, linestyle='--', color='red')
-    ax.set_xlim(4000, 100000)
-    ax.set_ylim(0.025, 0.03)
-    st.pyplot(fig)
+# # --- Long term tab ---
+# with tab3:
+#     st.subheader("Long Term (4000–20000 spins)")
+#     st.write("In the long term the excess profit persists but is diluted by players on long streaks")
+#     fig, ax = plt.subplots()
+#     ax.plot(numbers_rolling_margin)
+#     ax.axhline(y=0.027027, linestyle='--', color='red')
+#     ax.set_xlim(4000, 100000)
+#     ax.set_ylim(0.025, 0.03)
+#     st.pyplot(fig)
 
-st.subheader("Spin Distribution")
-st.write(
-"""
-The distribution of spins is skewed due to the budget constraint we introduced, however, we can see that the 
-average number of spins matches the theory of gambler's ruin with a £100 starting balance.
-"""
-)
-fig, ax = plt.subplots()
-plt.hist(results["numbers"]["overall"]["spin_list"], bins = 50)
-ax.axvline(x=3703, linestyle = '--', color = 'green')
+# st.subheader("Spin Distribution")
+# st.write(
+# """
+# The distribution of spins is skewed due to the budget constraint we introduced, however, we can see that the 
+# average number of spins matches the theory of gambler's ruin with a £100 starting balance.
+# """
+# )
+# fig, ax = plt.subplots()
+# plt.hist(results["numbers"]["overall"]["spin_list"], bins = 50)
+# ax.axvline(x=3703, linestyle = '--', color = 'green')
 
-annotation = f'''
-Theoretical average spins to bankruptcy from £100 = 3,703 \n
-Mean spins to bankruptcy in sample = {np.mean(results["numbers"]["overall"]["spin_list"]):.2f}
-'''
+# annotation = f'''
+# Theoretical average spins to bankruptcy from £100 = 3,703 \n
+# Mean spins to bankruptcy in sample = {np.mean(results["numbers"]["overall"]["spin_list"]):.2f}
+# '''
 
-ax.text(
-    5000,        # x in data coordinates
-    800,          # y in data coordinates (pick a suitable y that is inside your plot area)
-    annotation, 
-    color='black',
-    fontsize=8
-)
+# ax.text(
+#     5000,        # x in data coordinates
+#     800,          # y in data coordinates (pick a suitable y that is inside your plot area)
+#     annotation, 
+#     color='black',
+#     fontsize=8
+# )
 
-st.pyplot(fig)
+# st.pyplot(fig)
 
-with st.expander("Why is this not normal?"):
-    st.write(
-    """
-    The distribution of spins has a left tail due to the budget constraint introduced. When approximating the normal distribution
-    there is no condition of budget, meaning that players can come back from a losing position of more than £100. In reality
-    this does not work because we assume players cannot play with negative balance.
-    """)
+# with st.expander("Why is this not normal?"):
+#     st.write(
+#     """
+#     The distribution of spins has a left tail due to the budget constraint introduced. When approximating the normal distribution
+#     there is no condition of budget, meaning that players can come back from a losing position of more than £100. In reality
+#     this does not work because we assume players cannot play with negative balance.
+#     """)
 
-st.subheader("Stopping Reason")
-st.write(
-"""
-Finally we can look at the reason for customers stopping. In the base case we expect this to be primarily due to running out of budget
-"""
-)
+# st.subheader("Stopping Reason")
+# st.write(
+# """
+# Finally we can look at the reason for customers stopping. In the base case we expect this to be primarily due to running out of budget
+# """
+# )
 
-df_stop_reason = pd.DataFrame(results["numbers"]["overall"]["stop_reasons"])
-df_stop_reason = df_stop_reason.value_counts()
-st.dataframe(df_stop_reason)
+# df_stop_reason = pd.DataFrame(results["numbers"]["overall"]["stop_reasons"])
+# df_stop_reason = df_stop_reason.value_counts()
+# st.dataframe(df_stop_reason)
