@@ -11,7 +11,8 @@ with col1:
     st.header("Hi, I'm Hallam 👋")
     st.markdown(f"""
             Welcome to my personal website! The intention behind this site is a place to share some examples of my analysis as well as a space to work on personal projects that interest me and develop
-            new skills.
+            new skills. All the code for this site and other projects can be found on my [Github](https://github.com/hallam-flda), I can be contacted either via 
+            [LinkedIn](https://www.linkedin.com/in/hallam-cunningham-772a27127) or Email at hallamflda@gmail.com
 
             This app has been created using [Streamlit](https://docs.streamlit.io) - a Python framework used for making web applications.
             Pages marked with a ⏳ are still a work in progress. I could of course hide these but I think it's important that
