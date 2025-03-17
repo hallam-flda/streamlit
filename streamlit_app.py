@@ -24,6 +24,7 @@ pages = {
         st.Page("pages/european_roulette_sims.py", title="European Roulette Simulations I", icon="⏳"),
     ],
     "Personal Development" :[
+        st.Page("pages/garmin_activity_map.py", title = "Garmin Activity Map"),
         st.Page("pages/learning_journal.py", title = "Python Learning Journal", icon="🐍"),
         st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard", icon="⏳")
     ]
