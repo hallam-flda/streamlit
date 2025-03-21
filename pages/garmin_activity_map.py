@@ -293,7 +293,7 @@ duration_metrics
 
 order by activity_id asc, timestamp asc
 
-"""    
+""" , language = "SQL"   
 )
 
 st.write(
@@ -339,4 +339,108 @@ I also recorded most of my physical activities, however, as it is a truly enormo
 
 This gave me an idea: Can I populate the gaps with my travel in-between locations?
 """
+)
+
+st.header("Attempt One", divider = True)
+
+st.write(
+"""
+Returning to the `activities_clean` dataset in BigQuery, I wanted to create a travel log that would flag any significant change in distance between two recorded garmin activities and treat this as
+a change in location.
+"""    
+)
+
+st.code(
+"""
+WITH
+  start_end_times AS (
+  SELECT
+    *,
+    MIN(timestamp) OVER (PARTITION BY activity_id) min_act_time,
+    MAX(timestamp) OVER (PARTITION BY activity_id) max_act_time
+  FROM
+    `garmin.activities_clean` ),
+    
+  lagging_values AS (
+  SELECT
+    *,
+    LAG(activity_id) OVER (ORDER BY timestamp) lag_activity_id,
+    LAG(position_lat) OVER (ORDER BY timestamp) lag_lat,
+    LAG(position_long) OVER (ORDER BY timestamp) lag_long
+  FROM
+    start_end_times
+  WHERE
+    min_act_time = timestamp
+    OR 
+    max_act_time = timestamp ),
+
+  distances AS (
+  SELECT
+    *,
+    -- built in BigQuery function for calculating distance between lat,long pairs
+    ST_DISTANCE( ST_GEOGPOINT(position_long, position_lat), ST_GEOGPOINT(lag_long, lag_lat) ) / 1000 AS distance_km
+  FROM
+    lagging_values
+  WHERE
+    -- there is a change in the activity_id
+    activity_id <> lag_activity_id 
+    )
+
+SELECT
+  *
+FROM
+  distances
+WHERE
+  distance_km > 30 -- want to indicate when I've moved a decent distance
+ORDER BY
+  timestamp ASC
+"""  , language = "SQL" 
+)
+
+st.write(
+"""
+This query returns a dataset with 74 rows and lat, lon pairs between changes of more than 30kms. The combination of BigQuery's `ST_DISTANCE()` and `ST_GEOPOINT()` functions made
+this far easier than I was anticipating.
+
+Returning to plot this on kepler, the arc plotting method provides a good way to show distant start and end points.
+"""    
+)
+
+st.image("media/garmin/first_travel_log.png")
+
+st.write(
+"""
+However, when zooming into some of my more travelled destinations such as Leeds, where I lived and worked and Sussex, where my family live, the plot becomes messy and looks almost as if
+I had been flying between the two locations.
+"""    
+)
+
+st.image("media/garmin/messy_arcs.png")
+
+st.write(
+"""
+To get around this I decided to trawl through the log manually and add a travel method to each row. While I trust my memory for the most part, adding this data is prone to human error
+(either with data entry or misremembering.) This is not something I would add if accuracy was critical.
+"""   
+)
+
+st.image("media/garmin/colour_coded_arcs.png")
+
+st.write(
+"""
+This is much better, however, I still don't like the fact that every change in location looks like a flight.
+
+So I had another idea: How can I plot my land route, even though I have not recorded this data?
+"""   
+)
+
+st.header("Google Routes API", divider = True)
+
+st.write(
+"""
+Since I have a log of lat, lon pairs for departure destination and arrival destination, I have all of the information required to plot a route in Google Maps. While there is no
+guarantee the route I took is the same as Google's choice of route, I think it still gives a better idea of any travel that took place across land.
+
+In order to use the [Google Routes API](https://developers.google.com/maps/documentation/routes), some more set-up is required to get the data in a format that can be posted to the API endpoint.
+"""    
 )
