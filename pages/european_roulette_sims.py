@@ -642,7 +642,11 @@ ax.bar(["No Conditions", "Weak Conditions", "Strong Conditions"], total_rev)
 ax.yaxis.set_major_formatter(mtick.FuncFormatter(lambda x, _: f'£{x:,.0f}'))
 st.pyplot(fig)
 
-
+st.markdown(
+"""
+It can be seen that margin percentage does not tell the whole story. Players ending their session earlier leads to a reduction in total revenue of £200k with weak conditions and £400k with the stronger conditions
+"""
+)
 
 
 #st.write(results_cond_strong["colours"])
