@@ -16,7 +16,7 @@ The purpose of this page is to detail the process from start to end product. I w
 """    
 )
 
-st.image("media/garmin_map.png")
+st.image("media/garmin/garmin_map.png")
 
 st.header("Data Collection", divider = True)
 
@@ -79,7 +79,7 @@ client = bigquery.Client(credentials=credentials, project=credentials.project_id
 st.write(
 """
 The folder of .fit files contains 6,742 items all of which cannot be opened in a normal text editor so they need to be converted to a format that can be uploaded into BigQuery. For
-this a function called extract_fit_data() has been used that creates a JSON style output and appends it to a list for each fit file.
+this a function called `extract_fit_data()` has been used that creates a JSON style output and appends it to a list for each fit file.
 
 Since there are a lot of files and I didn't know how long it would take, I added a print statement to track progress.
 """)
@@ -136,12 +136,30 @@ job.result()
 st.header("Data Cleaning", divider = True)
 st.write(
 """
-Some of the column headers returned as 'unknown', those that I could work out I relabelled with appropriate headers and then discarded those I can't make sense of.
+The first step is to take a look at the data uploaded from the Python import...
+"""
+)
 
-Since there is not a unique identifier for each activity (which I could have written in the original python query) I decided to classify any activities that take place more than 6 hours apart
+st.image("media/garmin/select_star_garmin.png")
+
+st.write(
+"""
+Some of the column headers returned as 'unknown', those that I could work out I relabelled with appropriate headers and then discarded those I couldn't make sense of. The schema description
+tab in BigQuery provides a handy space to add notes for each column.
+"""
+)
+
+st.image("media/garmin/activities_schema.png")
+
+st.write("""
+Any rows that have a null lat or long field are removed as they won't be useful for this exercise.
+         
+Temperature is always null as my model of Garmin does not have that capability.
+         
+Since there is not a reliable unique sequential identifier for each activity I decided to classify any activities that take place more than 6 hours apart
 from one another as a new activity.
 
-Finally, flagging each 6 hour gap and summing across all rows serves to create an activity ID that can now be used to isolate each event.
+Finally the lat, lon columns have to be transformed from semi-circle units (as used in fit files) to regular degree based lat, lon pairs.
 """)
 
 st.code(
@@ -212,3 +230,113 @@ WITH
 
 """    
 , language = 'SQL')
+
+st.header("Derived Columns", divider = True)
+
+st.write("""
+Now that the data contains only relevant fields and non-null rows, some new columns are required for use with the [kepler.gl](https://kepler.gl/) framework.
+""")
+
+st.code(
+"""
+
+create table garmin.activities_routed as
+
+WITH
+  base_table_with_lags AS (
+  SELECT
+    *,
+    MAX(timestamp) OVER (PARTITION BY activity_id) end_time,
+    MIN(timestamp) OVER (PARTITION BY activity_id) start_time,
+    LEAD(timestamp) OVER (PARTITION BY activity_id ORDER BY timestamp ASC) lead_timestamp,
+    LEAD(position_lat) OVER (PARTITION BY activity_id ORDER BY timestamp ASC) lead_lat,
+    LEAD(position_long) OVER (PARTITION BY activity_id ORDER BY timestamp ASC) lead_long,
+    MAX(distance) OVER (PARTITION BY activity_id) end_distance,
+    MIN(distance) OVER (PARTITION BY activity_id) start_distance
+  FROM
+    `tonal-run-447413-c0.garmin.activities_clean`
+     )
+
+, duration_metrics as 
+(  
+SELECT
+  activity_id,
+  avg_heart_rate,
+  cadence,
+  enhanced_altitude,
+  distance distance_meters,
+  start_time,
+  end_time,
+  position_lat,
+  position_long,
+  lead_lat,
+  lead_long,
+  end_distance,
+  timestamp,
+  TIMESTAMP_DIFF(lead_timestamp, timestamp, SECOND) time_increment,
+  TIMESTAMP_DIFF(end_time, start_time, SECOND) adjusted_activity_duration_seconds,
+  TIMESTAMP_DIFF(end_time, start_time, MINUTE) adjusted_activity_duration_minutes,
+  end_distance/TIMESTAMP_DIFF(end_time, start_time, SECOND) adjusted_speed_ms
+FROM
+  base_table_with_lags
+)
+
+select
+*,
+sum(time_increment) over (partition by activity_id) activity_duration_seconds,
+(sum(time_increment) over (partition by activity_id))/60 activity_duration_minutes,
+end_distance/sum(time_increment) over (partition by activity_id) avg_speed_ms,
+60 / ((end_distance/sum(time_increment) over (partition by activity_id))*3.6) pace_mins_per_km
+
+from
+duration_metrics
+
+order by activity_id asc, timestamp asc
+
+"""    
+)
+
+st.write(
+"""
+First, time and location columns are 'maxed and minned' to help calculate total distance and time of each activity. The lead of these columns is also taken to create incremental windows.
+This will be particularly important for plotting these exercises as the 'line' type in Kepler.
+
+Then the `TIMESTAMP_DIFF()` function is used on the columns created in the previous select to give some important duration metrics.
+
+Finally an activity duration is re-calculated using the sum between each timestamp. The purpose of this is to differentiate between chronological time and time spent actually
+on activity in the instance of paused events. In writing this up I realise that this will be the same as the total timestamp difference so to fix this I will need to exclude any abnormally
+long gaps in entries (more than 20-30s). Something else to add to the issues log!
+"""    
+)
+
+st.header("Plotting Garmin Activities", divider = True)
+
+st.write(
+"""
+Plotting the data in Kepler is remarkably simple. Once uploading the data from `garmin.activities_routed` as a CSV exported from BigQuery, all that is required is to choose the plotting
+method and map the correct columns to the required fields in the Kepler UI. 
+
+Below is a screenshot of my regular run routes, most of which start in the Kirkstall area where I used to live.
+"""    
+)
+
+st.image("media/garmin/local_routes.png")
+
+st.write(
+"""
+This is all I was really hoping for when I started this project, a way to visualise all of my common routes along with some interesting stats about pace, heart rate etc.
+
+However, when zooming out to view on a global scale, it isn't immediately obvious to the viewer where to zoom into.
+"""
+)
+
+st.image("media/garmin/world_view_empty.png")
+
+st.write(
+"""
+During my career break in 2023, I travelled the lower half of South America pretty comprehensively, making a conscious effort to [keep a physical record of the people I met.](hallam-flda.streamlit.app/travel_friends)
+I also recorded most of my physical activities, however, as it is a truly enormous continent, some of these plots are quite small and distant from one another unless you zoom in.
+
+This gave me an idea: Can I populate the gaps with my travel in-between locations?
+"""
+)
