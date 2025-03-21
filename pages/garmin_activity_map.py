@@ -341,7 +341,7 @@ This gave me an idea: Can I populate the gaps with my travel in-between location
 """
 )
 
-st.header("Attempt One", divider = True)
+st.header("Plotting Transit", divider = True)
 
 st.write(
 """
@@ -442,5 +442,94 @@ Since I have a log of lat, lon pairs for departure destination and arrival desti
 guarantee the route I took is the same as Google's choice of route, I think it still gives a better idea of any travel that took place across land.
 
 In order to use the [Google Routes API](https://developers.google.com/maps/documentation/routes), some more set-up is required to get the data in a format that can be posted to the API endpoint.
+
+Rather than reimport all the code here, I have appended the notebook I used to download from BigQuery, pass it to the Google API and save the response back in a BigQuery table. It took me a few
+attempts to get the dataframe in the correct format but working with a notebook directly in the BigQuery console makes the whole process a lot quicker than switching from IDE to console.
 """    
 )
+
+with open("static/Non_flight_transit_routing.html", "r", encoding="utf-8") as f:
+    html = f.read()
+
+components.html(html, height=800, scrolling = True)
+
+st.code(
+"""
+create table garmin.ranked_journeys as 
+
+SELECT
+  *,
+  lead(longitude) over (partition by activity_id order by step asc) lead_long,
+  lead(latitude) over (partition by activity_id order by step asc) lead_lat
+FROM
+  `tonal-run-447413-c0.garmin.non_flight_journeys`
+
+  order by activity_id asc, step asc
+""", language = 'SQL'
+)
+
+st.write(
+"""
+Once uploaded to BigQuery after leading the lat and lon positions the data can be exported as a CSV ready to use in the kepler UI.
+
+The output of this API response is around 190,000 rows of routing data for my non-flight transit. This is a lot of data and bloats the final HTML file to a size of 91MB. This means
+that I am not able to host directly within streamlit and it can fail to load on mobile devices. Another improvement would be to remove some intermediate steps especially in the longer journeys.
+"""    
+)
+
+st.header("Improved Transit Plotting", divider = True)
+
+st.write(
+"""
+Now with the complete set of journey co-ordinates, the entire route can be plotted along with some extra information on the tooltip such as journey duration and distance.
+
+For the same region as the previous example, a much clearer picture of the actual route I took is now displayed.
+"""    
+)
+
+st.image("media/garmin/improved_land_transit.png")
+
+st.header("Potential Improvements", divider = True)
+
+st.write(
+"""
+Overall I think the map currently hosted on Github passes the mark for a minimum viable product, however, there are some changes that I think would improve this map.
+"""    
+)
+
+st.subheader("File Size")
+
+st.write(
+"""
+Currently the file size is 91MB which is massive for an HTML file. This can be greatly reduced by removing some of the more detailed land journeys or simply deleting every other row.
+The segment level detail is a bit overkill especially considering no actual data (such as heart rate or cadence) is recorded as with my recorded garmin data.
+"""    
+)
+
+st.subheader("Travel Accuracy")
+
+st.write(
+"""
+Transit is plotted between two consecutive activities in my Garmin history. For this to be a realistic representation of my travel I would have to record activities immediately prior to
+leaving one location and immediately on arrival at the next. This clearly isn't always going to be the case. For the most part this doesn't really matter, it is only an indication of
+where I have travelled in this time period.
+
+One potential 'quick win' would be to find the nearest airport for each of the start and end points of my flights. At the moment I returned from Buenos Aires to Southend which is not a real
+flight path sadly.
+
+I have also used roads to plot train journeys. Again, this could be fixed with some agonising through the Google API docs but accuracy was never the top priority with this project.
+"""    
+)
+
+st.subheader("Auto Updating")
+
+st.write(
+"""
+The map was constructed entirely from one export of my garmin files up to 15th Feb 2025. There is a point to be made that constantly posting your exact whereabouts on the internet might not
+be the smartest move so any auto-updating should probably exclude the month previous. That being said it would be a nice improvement to have the map update itself with frequent pulls of
+garmin data using the garminconnect API. I may revisit this in the future but for the time being I would repeat the process every 3-6 months or so. 
+"""    
+)
+
+
+
