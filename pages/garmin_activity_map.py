@@ -497,15 +497,20 @@ Overall I think the map currently hosted on Github passes the mark for a minimum
 """    
 )
 
-st.subheader("File Size - Partially Complete")
+st.subheader("File Size - Complete")
 
 st.write(
 """
 Currently the file size is 91MB which is massive for an HTML file. This can be greatly reduced by removing some of the more detailed land journeys or simply deleting every other row.
 The segment level detail is a bit overkill especially considering no actual data (such as heart rate or cadence) is recorded as with my recorded garmin data.
 
+* Update One:
 I have now deleted any obselete columns and reformatted the number formats in excel. This has reduced file size down to 43.5MB. This is still large and the idea of deleting a portion of the rows
 makes sense but it is a very good low-effort start.
+
+* Update Two:
+I have kept every 4th line for physical activities and 5th line for land transit. This was a bit annoying because it meant I had to re-lead the coordinates in SQL but the file size is now
+sitting at 9.1MB. I also removed the first and last 5% of my activities as to disguise start and end points.
 """    
 )
 
