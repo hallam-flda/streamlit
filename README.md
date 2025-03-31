@@ -2,7 +2,7 @@
 
 A place to display some analysis along with any technical upskilling.
 
-[![Open in Streamlit](https://hallam-flda.streamlit.app/)
+[![Open in Streamlit]](https://hallam-flda.streamlit.app/)
 
 ## Tools used
 
