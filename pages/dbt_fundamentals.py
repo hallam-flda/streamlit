@@ -318,7 +318,7 @@ with st.expander("See Activity Log SQL"):
         order by activity_id asc, timestamp asc
 
         """
-        )
+        , language='sql')
 with st.expander("See Activity Log Condensed SQL"):
     st.code(
         """
@@ -399,7 +399,7 @@ with st.expander("See Activity Log Condensed SQL"):
         st_distance(
             st_geogpoint(position_long, position_lat), st_geogpoint(lead_long, lead_lat)/ 1000 < 1
         """
-        )
+        , language='sql')
     
 st.subheader("Travel Log")
 st.write(
@@ -442,4 +442,17 @@ with st.expander("See Travel Log SQL"):
         FROM distance_and_time_diffs
         WHERE dist_to_next_row_km > 30
 
-        """)
+        """, language = 'sql')
+
+st.header("The End Product", divider = True)
+
+st.write(
+"""
+As a result of this process, after loading the data in the source table `garmin.activities` and run this job to populate all of the necessary downstream tables.
+
+In the image below, we can see my source table still sits in the garmin schema but all of the others are now populated in the dbt_hcunningham schema. Furthermore, the staging and intermediate tables are
+stored as views rather than tables. This means they store less data permenantly and will only run if they are queried directly (which there is little reason to do in this use-case.)
+"""
+)
+
+st.image("media/garmin/end_dbt_view.png")
