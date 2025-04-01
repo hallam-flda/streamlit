@@ -1,19 +1,14 @@
-# 🎈 Blank app template
+# Hallam-flda Streamlit App
 
-A simple Streamlit app template for you to modify!
+A place to display some analysis along with any technical upskilling.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
+[![Open in Streamlit]](https://hallam-flda.streamlit.app/)
 
-### How to run it on your own machine
+## Tools used
 
-1. Install the requirements
-
-   ```
-   $ pip install -r requirements.txt
-   ```
-
-2. Run the app
-
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+- Python
+- SQL
+- Github Pages
+- Dbt
+- Google Cloud Platform
+- BigQuery
