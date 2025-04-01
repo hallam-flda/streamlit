@@ -497,18 +497,22 @@ Overall I think the map currently hosted on Github passes the mark for a minimum
 """    
 )
 
-st.subheader("File Size - Complete")
+st.subheader("File Size - Complete ✅")
 
 st.write(
 """
 Currently the file size is 91MB which is massive for an HTML file. This can be greatly reduced by removing some of the more detailed land journeys or simply deleting every other row.
 The segment level detail is a bit overkill especially considering no actual data (such as heart rate or cadence) is recorded as with my recorded garmin data.
+"""
+)
+st.caption("Update - 21/03/2025")
 
-* Update One:
+st.write("""
 I have now deleted any obselete columns and reformatted the number formats in excel. This has reduced file size down to 43.5MB. This is still large and the idea of deleting a portion of the rows
 makes sense but it is a very good low-effort start.
-
-* Update Two:
+""")
+st.caption("Update - 25/03/2025")
+st.write("""
 I have kept every 4th line for physical activities and 5th line for land transit. This was a bit annoying because it meant I had to re-lead the coordinates in SQL but the file size is now
 sitting at 9.1MB. I also removed the first and last 5% of my activities as to disguise start and end points.
 """    
@@ -529,7 +533,7 @@ I have also used roads to plot train journeys. Again, this could be fixed with s
 """    
 )
 
-st.subheader("Auto Updating")
+st.subheader("Auto Updating - In Progress ⏳")
 
 st.write(
 """
@@ -539,5 +543,13 @@ garmin data using the garminconnect API. I may revisit this in the future but fo
 """    
 )
 
+st.caption("Update - 01/04/2025")
 
+st.write(
+"""
+Having recently taken the [Dbt Fundamentals training](https://learn.getdbt.com/learn/course/dbt-fundamentals) which I would strongly recommend for anyone trying to automate a data flow, I have now set up a workflow so I only need
+to append new data to the original `garmin.activities` dataset. Then I run the job in Dbt and it will output the end files I need to update my map; not quite auto-updating but removes
+a fair amount of the manual lifting.
+"""
+)
 
