@@ -448,10 +448,11 @@ st.header("The End Product", divider = True)
 
 st.write(
 """
-As a result of this process, after loading the data in the source table `garmin.activities` and run this job to populate all of the necessary downstream tables.
+As a result of this process, after loading the data in the source table `garmin.activities` all I need to do is run this job to populate all of the necessary downstream tables.
 
 In the image below, we can see my source table still sits in the garmin schema but all of the others are now populated in the dbt_hcunningham schema. Furthermore, the staging and intermediate tables are
-stored as views rather than tables. This means they store less data permenantly and will only run if they are queried directly (which there is little reason to do in this use-case.)
+stored as views rather than tables. This means when queried, they reference the source table with the
+query rather than being stored and will only run if they are queried directly (which there is little reason to do in this use-case.)
 """
 )
 
