@@ -1,0 +1,33 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: tonal-run-447413-c0
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: Build Docker image
+      run: |
+        gcloud builds submit --tag gcr.io/tonal-run-447413-c0/streamlit-app
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy streamlit-app \
+          --image gcr.io/tonal-run-447413-c0/streamlit-app \
+          --platform managed \
+          --region europe-west2 \
+          --allow-unauthenticated
