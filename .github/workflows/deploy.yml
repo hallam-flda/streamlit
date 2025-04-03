@@ -17,6 +17,8 @@ jobs:
       uses: google-github-actions/auth@v1
       with:
         credentials_json: '${{ secrets.GCP_SA_KEY }}'
+        impersonate_service_account: 'cloud-build-sa@tonal-run-447413-c0.iam.gserviceaccount.com'
+
 
     - name: Set up gcloud
       uses: google-github-actions/setup-gcloud@v1
