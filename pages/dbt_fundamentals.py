@@ -457,3 +457,48 @@ query rather than being stored and will only run if they are queried directly (w
 )
 
 st.image("media/garmin/end_dbt_view.png")
+
+st.header("Other Useful Learnings", divider = True)
+
+st.subheader("Tests")
+
+st.write(
+"""
+One of the benefits of using Dbt is setting up tests on each model to ensure the final data appears in a clean and correct format.
+
+When setting up any workflow there is no guarantee that the data we will receive in future will be the same as the initial run.
+For this reason it is important to set up tests.
+
+There are two types of test, generic and singular. I will define each briefly below.
+"""
+)
+
+st.subheader("Generic Tests")
+
+st.write(
+"""
+Generic tests are the standard, out-the-box, tests that we can apply to any column. These are: `unique`, `not_null`, `accepted_values` and `relationships`
+
+Each of these tests generate an additional step in the DAG where we can only move to the next step if the test is passed. We could construct
+these tests ourselves as they are simply additional SQL on a `select *` of the final model, but defining in a yaml file saves the headache of doing so.
+
+* `unique`: checks that all the values in the column are unique, useful for primary keys and dimension tables.
+* `not_null`: useful for any column that will be joined onto, therefore useful for foreign and primary keys.
+* `accepted_values`: expects a list of values that are authorised to be in the table, good for spotting any new levels in a categorical column.
+* `relationships`: checks that all the values of one column exist in another table/model referenced in the macro supplied. Useful in case of clashes in source data syncing.
+
+I have not used tests too heavily in the garmin workflow, mainly because I already filter out the nulls and there is only one source table
+so the chances of something going wrong as minimal, however, it's good to have an understanding of why I might need these in future.
+"""    
+)
+
+st.subheader("Singular Tests")
+
+st.write(
+"""
+Outside of the generic tests, we may want to test for some behaviour that is unique to the model in question. 
+
+Here I could actually make good use of the tests, such as when the difference between any two rows in an acitvity is greater than 60 seconds, this would suggest
+I had lost satellite data and therefore the activity data may not be reliable.
+"""
+)
