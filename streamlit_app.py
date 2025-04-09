@@ -16,6 +16,7 @@ pages = {
     "Personal Development" :[
         st.Page("pages/garmin_activity_map.py", title = "Garmin Activity Map"),
         st.Page("pages/dbt_fundamentals.py", title = "Dbt Fundamentals"),
+        st.Page("pages/deploying_to_google_cloud.py", title = "Hosting This Site on Google", icon="⏳"),
         st.Page("pages/learning_journal.py", title = "Python Learning Journal", icon="🐍")
        # st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard", icon="⏳")
     ],
