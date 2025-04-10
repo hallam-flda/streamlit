@@ -1,38 +1,38 @@
-name: Deploy to Google Cloud Run
+# name: Deploy to Google Cloud Run
 
-on:
-  push:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main]
 
-jobs:
-  deploy:
-    name: Build and Deploy
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     name: Build and Deploy
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+#     steps:
+#     - name: Checkout code
+#       uses: actions/checkout@v3
 
-    - name: Authenticate to Google Cloud
-      uses: google-github-actions/auth@v1
-      with:
-        credentials_json: '${{ secrets.GCP_SA_KEY }}'
-        token_format: 'access_token'
+#     - name: Authenticate to Google Cloud
+#       uses: google-github-actions/auth@v1
+#       with:
+#         credentials_json: '${{ secrets.GCP_SA_KEY }}'
+#         token_format: 'access_token'
 
 
-    - name: Set up gcloud
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: tonal-run-447413-c0
+#     - name: Set up gcloud
+#       uses: google-github-actions/setup-gcloud@v1
+#       with:
+#         project_id: tonal-run-447413-c0
 
-    - name: Build Docker image
-      run: |
-        gcloud builds submit --tag gcr.io/tonal-run-447413-c0/streamlit-app
+#     - name: Build Docker image
+#       run: |
+#         gcloud builds submit --tag gcr.io/tonal-run-447413-c0/streamlit-app
 
-    - name: Deploy to Cloud Run
-      run: |
-        gcloud run deploy streamlit-app \
-          --image gcr.io/tonal-run-447413-c0/streamlit-app \
-          --platform managed \
-          --region europe-west2 \
-          --allow-unauthenticated
+#     - name: Deploy to Cloud Run
+#       run: |
+#         gcloud run deploy streamlit-app \
+#           --image gcr.io/tonal-run-447413-c0/streamlit-app \
+#           --platform managed \
+#           --region europe-west2 \
+#           --allow-unauthenticated
