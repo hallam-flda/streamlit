@@ -156,6 +156,34 @@ generating some IP addresses that people will be directed to when they use my do
 """
 )
 
+st.header("Deploying Changes to Self-Hosted Version", divider=True)
+
+st.write(
+"""
+Unfortunately the changes I make in the github codespace do not automatically push to my self-hosted version. This is possible but I haven't quite figured out how yet so for the time being when I want to push changes
+to the version hosted on my custom URL I need to run the following command in the codespace terminal.
+"""
+)
+
+st.code(
+"""
+gcloud run deploy streamlit-app \
+  --source . \
+  
+  --region europe-west1 \
+  
+  --allow-unauthenticated
+""", langauge = 'bash'    
+)
+
+st.write(
+"""
+This is much the same as the initial command required to set up the cloud run app in the first place and does not add a lot of time/hassle to the process.
+"""
+)
+
+st.image("media/deploy_command.png")
+
 st.header("Next Steps", divider=True)
 
 st.write(
