@@ -189,5 +189,14 @@ st.header("Next Steps", divider=True)
 st.write(
 """
 Now the website is live at my custom URL, however, I need to work out how to also map www.hallamcunningham.com because despite the fact I own that, it is another URL that needs to be mapped to the Cloud Run app.
+I think it is as simple as adding one more record to the DNS settings in squarespace.
 """
 )
+
+st.caption("Update 11/04/2025")
+st.write(
+"""
+All I needed to do was add a CNAME record to my DNS settings in squarespace that points at ghs.googlehosted.com and then add another custom domain in settings with www.hallamcunningham.com
+"""
+)
+
