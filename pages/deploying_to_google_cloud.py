@@ -173,7 +173,7 @@ gcloud run deploy streamlit-app \
   --region europe-west1 \
   
   --allow-unauthenticated
-""", langauge = 'bash'    
+""", language = 'bash'    
 )
 
 st.write(
