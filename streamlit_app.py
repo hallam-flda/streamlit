@@ -16,7 +16,7 @@ pages = {
     "Personal Development" :[
         st.Page("pages/garmin_activity_map.py", title = "Garmin Activity Map"),
         st.Page("pages/dbt_fundamentals.py", title = "Dbt Fundamentals"),
-        st.Page("pages/deploying_to_google_cloud.py", title = "Hosting This Site on Google", icon="⏳"),
+        st.Page("pages/deploying_to_google_cloud.py", title = "Hosting This Site on Google"),
         st.Page("pages/learning_journal.py", title = "Python Learning Journal", icon="🐍")
        # st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard", icon="⏳")
     ],
@@ -31,8 +31,10 @@ pages = {
         st.Page("pages/stochastic_processes.py", title="Stochastic Processes - Introduction"),
         st.Page("pages/stochastic_processes_ii.py", title="Stochastic Processes - Stopping Times"),
         st.Page("pages/european_roulette_sims.py", title="European Roulette Simulations I"),
+    ],
+    "Football Dashboard": [
+    st.Page("pages/dashboard_prototype.py", title="Dashboard Prototype", icon = "⏳")
     ]
-
 }
 
 
