@@ -28,7 +28,7 @@ with col2:
 skills_col, learning_col = st.columns([1,1])
 
 with skills_col:
-    st.subheader("Techincal Skills")#, divider = True)
+    st.subheader("Technical Skills")#, divider = True)
     st.markdown(
     """
     - **SQL** - Advanced - Daily use for 6+ years (BigQuery, Redshift & Impala)
@@ -52,7 +52,9 @@ st.header("Professional Summary", divider = True)
 st.write("""
 Senior Business Intelligence Analyst with 6 years of experience in the digital gambling industry. Over 2 years of people management duties for 3 Junior Analysts. 
 Passionate about learning new skills and teaching existing skills to team members. 
-Proven track-record of project management for the wider BI department with a focus on platform migration.
+         
+Proven track-record of project management for the wider BI department with a focus on platform migration. Experienced in communicating with
+ non-technical stakeholders and senior leadership.
              
 """)
 
