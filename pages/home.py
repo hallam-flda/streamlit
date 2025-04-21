@@ -8,22 +8,44 @@ current_year = datetime.datetime.now()
 col1, col2 = st.columns([1,1])  # Adjust ratios as needed
 
 with col1:
-    st.header("Hi, I'm Hallam 👋")
+    st.header("Hi, I'm Hallam 👋", divider = True)
     st.markdown(f"""
-            Welcome to my personal website! The intention behind this site is a place to share some examples of my analysis as well as a space to work on personal projects that interest me and develop
-            new skills. All the code for this site and other projects can be found on my [Github](https://github.com/hallam-flda), I can be contacted either via 
+            Welcome to my personal portfolio! If you are short on time and want a quick example of my work, I recommend you start with viewing my
+            [Garmin Map Project](https://hallam-flda.github.io/garmin_map/) and the [associated [write-up](https://hallamcunningham.com/garmin_activity_map).
+            Otherwise, please navigate using the sidebar for other projects.
+
+            All the code for this site and other projects can be found on my [Github](https://github.com/hallam-flda), I can be contacted either via 
             [LinkedIn](https://www.linkedin.com/in/hallam-cunningham-772a27127) or Email at hallamflda@gmail.com
 
             This app has been created using [Streamlit](https://docs.streamlit.io) - a Python framework used for making web applications.
-            Pages marked with a ⏳ are still a work in progress. I could of course hide these but I think it's important that
-            I show the development process as well as just the finished project.
+            Pages marked with a ⏳ are actively being worked on. 
             """,unsafe_allow_html=True)
 
 with col2:
-    st.subheader(" ")
+    st.header(" ")
     st.image("media/headshot_circle.jpg")
 
+skills_col, learning_col = st.columns([1,1])
 
+with skills_col:
+    st.subheader("Techincal Skills")#, divider = True)
+    st.markdown(
+    """
+    - **SQL** - Advanced - Daily use for 6+ years (BigQuery, Redshift & Impala)
+    - **Python** - Intermediate - Simulations, Scripting, Data Visualisation
+    - **Dashboarding** - Intermediate - Streamlit, Looker & Power BI
+    - **Excel** - Advanced
+    """
+    )
+
+with learning_col:
+    st.subheader("Currently Learning")#, divider = True)
+    st.markdown(
+    """
+    - **Dbt** - ETL Process - see [Using Dbt for My Acitivty Map](https://hallamcunningham.com/dbt_garmin)
+    - **SQL** - Clickhouse 
+    - **Streamlit** - [Advanced Streamlit dashboarding](https://hallamcunningham.com/dashboard_protoype)
+    """)
 
 st.header("Professional Summary", divider = True)
 
