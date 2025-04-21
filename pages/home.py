@@ -11,7 +11,7 @@ with col1:
     st.header("Hi, I'm Hallam 👋", divider = True)
     st.markdown(f"""
             Welcome to my personal portfolio! If you are short on time and want a quick example of my work, I recommend you start with viewing my
-            [Garmin Map Project](https://hallam-flda.github.io/garmin_map/) and the [associated [write-up](https://hallamcunningham.com/garmin_activity_map).
+            [Garmin Map Project](https://hallam-flda.github.io/garmin_map/) and the associated [write-up](https://hallamcunningham.com/garmin_activity_map).
             Otherwise, please navigate using the sidebar for other projects.
 
             All the code for this site and other projects can be found on my [Github](https://github.com/hallam-flda), I can be contacted either via 
