@@ -1,18 +1,11 @@
 
 import streamlit as st
-import streamlit.components.v1 as components
-
 
 st.set_page_config(
     page_title="Hallam Cunningham",
     page_icon="📈",
     layout = 'centered'
 )
-
-with open("google_analytics.html", "r") as f:
-    ga_code = f.read()
-    components.html(ga_code, height=0)
-
 
 pages = {
     "Home": [
