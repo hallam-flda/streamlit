@@ -14,13 +14,15 @@ col1, col2, col3 = st.columns([1,1,1])
 
 with col1:
     st.image("media/accreds/getting-started-with-clickhouse.png")
+    st.image("media/accreds/insert_data.png")
 
 with col2:
     st.image("media/accreds/clickhouse-architecture.png")
+    st.image("media/accreds/analyse_data.png")
     
 with col3:
     st.image("media/accreds/modeling-data-for-clickhouse.png")
-
+    st.image("media/accreds/materialised_views.png")
     
 st.subheader("Dbt")
 
