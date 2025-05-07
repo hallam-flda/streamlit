@@ -16,8 +16,8 @@ pages = {
         st.Page("pages/garmin_activity_map.py", title = "Garmin Activity Map"),
         st.Page("pages/dbt_garmin.py", title = "Using Dbt for My Acitivty Map"),
         st.Page("pages/deploying_to_google_cloud.py", title = "Hosting This Site on Google"),
-        st.Page("pages/learning_journal.py", title = "Python Learning Journal", icon="🐍"),
-        st.Page("pages/accreditation_cabinet.py", title = "Accreditation Cabinet", icon ="🏆")
+        st.Page("pages/accreditation_cabinet.py", title = "Accreditation Cabinet"),
+        st.Page("pages/learning_journal.py", title = "Python Learning Journal", icon="🐍")
        # st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard", icon="⏳")
     ],
 
