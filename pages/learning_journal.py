@@ -63,7 +63,7 @@ CREATE TABLE garmin.activities_clean AS
 
 WITH
   activities AS
-  -- Remove any instances where postion_lat and position_long are null because we can't do
+  -- Remove any instances where position_lat and position_long are null because we can't do
   -- anything with this anyway
   (
   SELECT

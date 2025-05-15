@@ -108,7 +108,7 @@ We can calculate the expected amount of time until the player has spent all of a
 
 The obvious example we can use this theory for is the case in which the gambler loses all of their initial bankroll.
 
-We will start by setting the customer's balance at £100 or $X_0 = 100$, what we're looking to find is where $\mathbb{E}[X_{t}] = 0$. We know that the absolute minimum time this could happen for £1 stakes would be 100 spins but winnings could greatly increase the time in which we expected to achieve a balane of zero. What we're looking for is the expected value of the stopping time,  $\mathbb{E}[\tau]$
+We will start by setting the customer's balance at £100 or $X_0 = 100$, what we're looking to find is where $\mathbb{E}[X_{t}] = 0$. We know that the absolute minimum time this could happen for £1 stakes would be 100 spins but winnings could greatly increase the time in which we expected to achieve a balance of zero. What we're looking for is the expected value of the stopping time,  $\mathbb{E}[\tau]$
 
 As we've seen before this can be written as a random walk like so:
 
@@ -173,7 +173,7 @@ $$
 st.markdown(r"""
 ### 1.2 Betting on Numbers
 
-In the previous example, the outcomes of the random walk were the previous balance $\pm 1$ because betting on colours will return your stake plus an additional unit. In the example of betting on numbers, you receive your stake plus 35 additional units, and therefore, the process can be modeled as:
+In the previous example, the outcomes of the random walk were the previous balance $\pm 1$ because betting on colours will return your stake plus an additional unit. In the example of betting on numbers, you receive your stake plus 35 additional units, and therefore, the process can be modelled as:
 
 $$ 
 X_{t+1} =  \begin{cases}

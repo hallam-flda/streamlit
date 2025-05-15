@@ -17,7 +17,7 @@ with col1:
     fully understand the ETL/ELT process yourself.
 
     For this reason, I have followed Dbt's extremely useful [fundamentals](https://learn.getdbt.com/learn/course/dbt-fundamentals/) course to create a job based off my [garmin map](https://hallam-flda.streamlit.app/garmin_activity_map) workflow.
-    This taught me a lot on how data should be structured and the difference between development/testing/production environments, as well as the need for staging tables etc. I would recommend any 
+    This taught me a lot about how data should be structured and the difference between development/testing/production environments, as well as the need for staging tables etc. I would recommend any 
     analyst who does not have a good understanding of data engineering to take the course, even if they never need to use Dbt.
     """    
     )
@@ -28,7 +28,7 @@ with col2:
     # image_url = "https://api.accredible.com/v1/frontend/credential_website_embed_image/badge/138653777"
 
     # # Display the image
-    # st.image(image_url, caption="A nice shiny badge! \n of course this could just be a saved image \n but if you copy the link you'll see it \n comes from accredible's API (promise!)", use_container_width=True)
+    # st.image(image_url, caption="A nice shiny badge! \n of course this could just be a saved image \n but if you copy the link you'll see it \n comes from Accredible's API (promise!)", use_container_width=True)
     
     components.iframe(
         "https://credentials.getdbt.com/embed/dff728a0-039e-44c6-845a-c3c538ac99b6",
@@ -43,8 +43,8 @@ st.header("The Use Case - Garmin Data", divider = True)
 
 st.write(
 """
-The course provides a good set of example data, however, I find that the knowledge sticks better when I'm working on something I care about. When working on my garmin map visualisation, I did a lot of 
-data cleaning, most of which is documented in the write up, however, it certainly was not best practise, nor did I organise the files efficiently enough to be able to reproduce easily with new data. What I needed was
+The course provides a good set of example data, however, I find that the knowledge sticks better when working on something I care about. When working on my garmin map visualisation, I did a lot of 
+data cleaning, most of which is documented in the write-up, however, it certainly was not best practise, nor did I organise the files efficiently enough to be able to reproduce easily with new data. What I needed was
 a fully production-ready data workflow to take raw data and output data in the same format as kepler takes in the kepler UI.
 
 Jumping ahead slightly, the final DAG (directed acyclic graph) looks like this:
@@ -66,7 +66,7 @@ st.write(
 In Dbt we can designated sources by defining them in a YAML file within our staging folder. There is no model within the Dbt ecosystem per se, rather it plugs in directly to 
 the database following the path defined in the YAML file. In this instance the file is named `_garmin__sources.yml`
 
-This is my first time using YAML files as well, but the syntax is fairly straightforward, I think of it as a .txt file but with some structure. This file is pointing at `garmin.activites` in my
+This is my first time using YAML files as well, but the syntax is fairly straightforward, I think of it as a .txt file but with some structure. This file is pointing at `garmin.activities` in my
 BigQuery environment as determined by the `schema:` and `name:` fields.
 """    
 )
@@ -161,7 +161,7 @@ st.header("Intermediate", divider = True)
 
 st.write(
 """
-This did not form part of the tutorial but after deducing that my original SQL script did more than just some light formatting, I determined that I should create an intermediatery step in the process. This is where I
+This did not form part of the tutorial but after deducing that my original SQL script did more than just some light formatting, I determined that I should create an intermediary step in the process. This is where I
 create session flags by lagging the timestamp and taking differences greater than 6 hours to be a new session.
 
 Again the code uses a reference macro to the staging model which links this script as part of a downstream process, one that can only begin if all the previous steps have completed without error.
@@ -498,7 +498,7 @@ st.write(
 """
 Outside of the generic tests, we may want to test for some behaviour that is unique to the model in question. 
 
-Here I could actually make good use of the tests, such as when the difference between any two rows in an acitvity is greater than 60 seconds, this would suggest
+Here I could actually make good use of the tests, such as when the difference between any two rows in an activity is greater than 60 seconds, this would suggest
 I had lost satellite data and therefore the activity data may not be reliable.
 """
 )

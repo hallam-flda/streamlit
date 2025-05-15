@@ -168,7 +168,7 @@ CREATE TABLE garmin.activities_clean AS
 
 WITH
   activities AS
-  -- Remove any instances where postion_lat and position_long are null because we can't do
+  -- Remove any instances where position_lat and position_long are null because we can't do
   -- anything with this anyway
   (
   SELECT
@@ -508,7 +508,7 @@ The segment level detail is a bit overkill especially considering no actual data
 st.caption("Update - 21/03/2025")
 
 st.write("""
-I have now deleted any obselete columns and reformatted the number formats in excel. This has reduced file size down to 43.5MB. This is still large and the idea of deleting a portion of the rows
+I have now deleted any obsolete columns and reformatted the number formats in excel. This has reduced file size down to 43.5MB. This is still large and the idea of deleting a portion of the rows
 makes sense but it is a very good low-effort start.
 """)
 st.caption("Update - 25/03/2025")

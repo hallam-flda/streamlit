@@ -178,7 +178,7 @@ st.pyplot(g2)
 
 st.markdown(
 """
-Now we have the porportion of actual goals scored by both the home and away teams in the league versus a prediction from their corresponding Poisson probability mass functions. It can be seen that the fit for the home goals is far better than away, but both are fairly accurate.
+Now we have the proportion of actual goals scored by both the home and away teams in the league versus a prediction from their corresponding Poisson probability mass functions. It can be seen that the fit for the home goals is far better than away, but both are fairly accurate.
 
 We can also estimate the probability of a selected number of goals to be scored by each team. For example the probability of the home team scoring 3 goals in any argentinian league game according to the poisson distribution is
 """    

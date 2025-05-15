@@ -826,14 +826,14 @@ st.header("Example Usage")
 st.markdown(r"""Given what we know about the distribution for the standard colour choice of european roulette what is the probability that after 1000 spins
             your balance is **either** < -£75 or > £25
             
-First we subsitute in the value of t to our general normal distribution formula
+First we substitute in the value of t to our general normal distribution formula
 
             
 $$
             N \sim \left(-\frac{1000}{37}, \left(\frac{6\sqrt{38}}{37}\right)^2 \cdot 1000 \right)
 $$              
 
-which tells us that our distribution will be centered around a mean of $E[Y_{1000}] \approx -27.03$ and a standard deviation of $\sigma\sqrt{t} \approx 31.62$ """)
+which tells us that our distribution will be centred around a mean of $E[Y_{1000}] \approx -27.03$ and a standard deviation of $\sigma\sqrt{t} \approx 31.62$ """)
 
 
 example_mean = -27.027027

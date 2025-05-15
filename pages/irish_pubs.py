@@ -32,7 +32,7 @@ st.header("Introduction", divider = True)
 st.markdown("""
 <p> When travelling Europe for the first time in 2014, 
     one of my good friends and I came across many an Irish Pub.
-    Having only travelled at younger than drinking age, these were a fairly new phonomena to me.
+    Having only travelled at younger than drinking age, these were a fairly new phenomena to me.
 
     
             """, unsafe_allow_html=True)
@@ -224,7 +224,7 @@ Quite a lot of the results appear not to be Irish Pubs. The presence of McDonald
 What I think is happening is Google will always return results even if it doesn't have any quality matches.
 
 In order to improve the accuracy, we can look for places that contain the words 'Irish' or 'Ireland'. While this may
-not be a foolproof method, it should remove erronous results like McDonald's.
+not be a foolproof method, it should remove erroneous results like McDonald's.
 
 The first step to doing this is joining the two datasets. We can do this through the location information.
             """)
@@ -396,7 +396,7 @@ lat_diff = lat.reshape(n, 1) - lat.reshape(1, n)
 lon_diff = lon.reshape(n, 1) - lon.reshape(1, n)
 
 # Haversine formula components computed vectorized
-R = 6371  # Earth's radius in kilometers
+R = 6371  # Earth's radius in kilometres
 a = np.sin(lat_diff / 2)**2 + np.cos(lat.reshape(n, 1)) * np.cos(lat.reshape(1, n)) * np.sin(lon_diff / 2)**2
 c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
 dist_matrix = R * c
@@ -566,7 +566,7 @@ wc = WordCloud(max_words=500, mask=guinness_mask, max_font_size=40, random_state
 # generate word cloud
 wc.generate_from_frequencies(word_count_dict)
 
-# create coloring from image
+# create colouring from image
 image_colors = ImageColorGenerator(guinness_colour)
 wc.recolor(color_func=image_colors)
 guinness_fig = plt.figure(figsize=(50, 50))

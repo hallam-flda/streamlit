@@ -226,7 +226,7 @@ There is nothing fancy going on here, I have simply taken the xGp90 of the Centr
 assumes the player is playing in fixtures representative of how the team always plays.
 
 For a CB that starts every fixture, this should work, however, for one who has only played in 
-fixtures where the team has generated lots of shooting opportunities, we will undoubtably be inflating the likelihood of him scoring.
+fixtures where the team has generated lots of shooting opportunities, we will undoubtedly be inflating the likelihood of him scoring.
 """
 )
 

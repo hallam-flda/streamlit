@@ -396,7 +396,7 @@ with tab3:
 st.subheader("Spin Distribution")
 st.write(
 """
-There is now a much heavier skew as we lose approximately 5% of the sample after 100 spins (those with a balance under the normal distribution treshold). This reduces the average number
+There is now a much heavier skew as we lose approximately 5% of the sample after 100 spins (those with a balance under the normal distribution threshold). This reduces the average number
 of spins in the sample so even if the margin % is similar to the simulation without luck conditions, the casino is set to make less revenue due to reduced staking.
 """
 )
@@ -561,7 +561,7 @@ with tab3:
 st.subheader("Spin Distribution")
 st.write(
 """
-There is now a much heavier skew as we lose approximately 5% of the sample after 100 spins (those with a balance under the normal distribution treshold). This reduces the average number
+There is now a much heavier skew as we lose approximately 5% of the sample after 100 spins (those with a balance under the normal distribution threshold). This reduces the average number
 of spins in the sample so even if the margin % is similar to the simulation without luck conditions, the casino is set to make less revenue due to reduced staking.
 """
 )

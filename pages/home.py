@@ -42,7 +42,7 @@ with learning_col:
     st.subheader("Currently Learning")#, divider = True)
     st.markdown(
     """
-    - **Dbt** - ETL Process - see [Using Dbt for My Acitivty Map](https://hallamcunningham.com/dbt_garmin)
+    - **Dbt** - ETL Process - see [Using Dbt for My Activity Map](https://hallamcunningham.com/dbt_garmin)
     - **SQL** - Clickhouse 
     - **Streamlit** - [Advanced Streamlit dashboarding](https://hallamcunningham.com/dashboard_protoype)
     """)
@@ -53,7 +53,7 @@ st.write("""
 Senior Business Intelligence Analyst with 6 years of experience in the digital gambling industry. Over 2 years of people management duties for 3 Junior Analysts. 
 Passionate about learning new skills and teaching existing skills to team members. 
          
-Proven track-record of project management for the wider BI department with a focus on platform migration. Experienced in communicating with
+Proven track record of project management for the wider BI department with a focus on platform migration. Experienced in communicating with
  non-technical stakeholders and senior leadership.
              
 """)
