@@ -12,8 +12,14 @@ pages = {
         st.Page("pages/home.py", title = "Introduction")
     ],
 
-    "Personal Development" :[
+    "Ad-Hoc Analysis":[
         st.Page("pages/garmin_activity_map.py", title = "Garmin Activity Map"),
+        st.Page("pages/travel_friends.py", title = "Travel Friends"),  
+        st.Page("pages/argentina_home_advantage.py", title = "Argentinian League Home Advantage"),
+        st.Page("pages/irish_pubs.py", title = "Irish Pubs of Europe")
+    ],
+    
+    "Personal Development" :[
         st.Page("pages/dbt_garmin.py", title = "Using Dbt for My Activity Map"),
         st.Page("pages/deploying_to_google_cloud.py", title = "Hosting This Site on Google"),
         st.Page("pages/accreditation_cabinet.py", title = "Accreditation Cabinet"),
@@ -21,11 +27,6 @@ pages = {
        # st.Page("pages/habit_tracker_dashboard.py", title = "Habit Tracking Dashboard", icon="⏳")
     ],
 
-    "Ad-Hoc Analysis":[
-        st.Page("pages/travel_friends.py", title = "Travel Friends"),  
-        st.Page("pages/argentina_home_advantage.py", title = "Argentinian League Home Advantage"),
-        st.Page("pages/irish_pubs.py", title = "Irish Pubs of Europe")
-    ],
     "Return To Player Inefficiency": [
         st.Page("pages/rtp_intro.py", title="Introduction"),
         st.Page("pages/stochastic_processes.py", title="Stochastic Processes - Introduction"),
